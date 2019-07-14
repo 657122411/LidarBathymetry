@@ -58,6 +58,10 @@ int main()
 				myfile.readDeepOutLas();
 				break;
 			}
+            case 8: {
+                myfile.readPhoton();
+                break;
+            }
 			}
 		}
 		else

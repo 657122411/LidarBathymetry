@@ -28,6 +28,6 @@ set(SOURCES
         /Users/taojianhao/CLionProjects/myLidar/myLidar/levmar/lm.h
         /Users/taojianhao/CLionProjects/myLidar/myLidar/levmar/misc.c
         /Users/taojianhao/CLionProjects/myLidar/myLidar/levmar/misc.h
-        )
+        PhotonData.h PhotonData.cpp)
 
-add_executable(myLidar ${SOURCES})
+add_executable(myLidar ${SOURCES} PhotonData.cpp)

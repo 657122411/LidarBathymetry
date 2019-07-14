@@ -3,6 +3,7 @@
 #include <iostream>
 #include "WaveData.h"
 #include "DeepWave.h"
+#include "PhotonData.h"
 #include <iomanip>
 using namespace std;
 
@@ -19,6 +20,7 @@ public:
 	void readDeep();
 	void readDeepByRed();
 	void readDeepOutLas();
+	void readPhoton();
 private:
 	char *m_filename;
 	FILE *m_filePtr;
