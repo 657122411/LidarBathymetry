@@ -6,19 +6,19 @@
 #define PHOTONDATA_H
 
 
-
 #include "iostream"
 #include "fstream"
 #include <vector>
 #include <bitset>
+
 using namespace std;
 
 
 //原始数据结构类
-class PhotonData
-{
+class PhotonData {
 public:
     PhotonData() {};
+
     ~PhotonData() {}
 
 
@@ -31,7 +31,6 @@ public:
 
 
 };
-
 
 
 #endif //PHOTONDATA_H

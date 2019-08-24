@@ -2,75 +2,67 @@
 #define TIMECONVERT_H
 
 //UTC时间结构体
-typedef struct Time
-{
-	int year;
-	int month;
-	int day;
-	int hour;
-	int minute;
-	int second;
+typedef struct Time {
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
+    int second;
 };
 
 //通用时
-typedef struct tagCOMMONTIME
-{
-	int   year;
-	int   month;
-	int   day;
-	int   hour;
-	int   minute;
-	double   second;
-}COMMONTIME;
+typedef struct tagCOMMONTIME {
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
+    double second;
+} COMMONTIME;
 
 typedef COMMONTIME *PCOMMONTIME;
 
-typedef struct tagTOD
-{
-	long sn;  //秒数的整数部分
-	double tos;//秒数的小数部分
-}TOD;
+typedef struct tagTOD {
+    long sn;  //秒数的整数部分
+    double tos;//秒数的小数部分
+} TOD;
 
 typedef TOD *PTOD;
 
-typedef struct
-{
-	long day; //整数天数
-	TOD tod;  //一天内的秒数
-}JULIANDAY;//儒略日
+typedef struct {
+    long day; //整数天数
+    TOD tod;  //一天内的秒数
+} JULIANDAY;//儒略日
 
 typedef JULIANDAY *PJULIANDAY;
 
-typedef struct tagMJULIANDAY
-{
-	long day;
-	TOD  tod;
-}MJULIANDAY;//新儒略日
+typedef struct tagMJULIANDAY {
+    long day;
+    TOD tod;
+} MJULIANDAY;//新儒略日
 
 typedef MJULIANDAY *PMJIANDAY;
 
-typedef struct tagTOW
-{
-	long sn;//秒整数部分
-	double tos;//秒小数部分
-}TOW;
+typedef struct tagTOW {
+    long sn;//秒整数部分
+    double tos;//秒小数部分
+} TOW;
 
 typedef TOW *PTOW;
 
-typedef struct tagGPSTIME
-{
-	int wn; //周数
-	TOW tow;//一周内的秒数
-}GPSTIME;//GPS时
+typedef struct tagGPSTIME {
+    int wn; //周数
+    TOW tow;//一周内的秒数
+} GPSTIME;//GPS时
 
 typedef GPSTIME *PGPSTIME;
 
-typedef struct tagDOY
-{
-	unsigned short year;
-	unsigned short day;
-	TOD tod;
-}DOY;//年积日
+typedef struct tagDOY {
+    unsigned short year;
+    unsigned short day;
+    TOD tod;
+} DOY;//年积日
 
 typedef DOY *PDOY;
 

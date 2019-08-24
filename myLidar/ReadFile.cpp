@@ -801,24 +801,20 @@ void ReadFile::readPhoton() {
     unsigned long long j = 0;
 
 
-    //把文件的位置指针移到文件尾获取文件长度
-    unsigned long long length;
-    fseeko(m_filePtr, 0L, SEEK_END);
-    length = ftello(m_filePtr);
+    do{
+        fseeko(m_filePtr, j*32 , SEEK_SET);
+        bitset<32> data;
+        memset(&data,0, sizeof(bitset<32>));
+        fread(&data, sizeof(bitset<32>),1,m_filePtr);
 
-    printf("readPhotonProcessing:");
+        if(data==00000000){
+            cout<<"hi";
+        }
 
-    PhotonData pdata;
-    pdata.getData(m_filePtr);
+        j++;
 
+    }while(!feof(m_filePtr));
 
-
-
-    //文件结束退出
-    if (feof(m_filePtr) == 1)
-    {
-        printf("finished!\n");
-    }
 
 
 }
