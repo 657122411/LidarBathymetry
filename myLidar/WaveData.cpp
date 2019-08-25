@@ -369,7 +369,7 @@ void WaveData::Filter(vector<float> &srcWave, float &noise) {
 //&srcWave:		通道原始数据
 //&waveParam：	该通道的高斯分量参数
 */
-void WaveData::Resolve(vector<float> &srcWave, vector<GaussParameter> &waveParam, float &noise) {
+void WaveData::Resolve(vector<float> &srcWave, vector <GaussParameter> &waveParam, float &noise) {
     //拷贝原始数据
     float data[320], temp[320];
     int i = 0, m = 0;
@@ -436,6 +436,7 @@ void WaveData::Resolve(vector<float> &srcWave, vector<GaussParameter> &waveParam
         //判断水表水底回波
         if (wavetypeFlag == true) {
             //找右侧拐点
+            surfaceMax = b;
             float rval = abs(temp[(int) b + 1] - temp[(int) b]);
             for (int i = b; b < 320 - b; i++) {
                 if (abs(temp[i + 1] - temp[i]) >= rval)
@@ -446,6 +447,7 @@ void WaveData::Resolve(vector<float> &srcWave, vector<GaussParameter> &waveParam
                 }
             }
             //找左侧拐点
+            surfaceMin = b;
             float lval = abs(temp[(int) b - 1] - temp[(int) b]);
             for (int i = b; b > 0; i--) {
                 if (abs(temp[i - 1] - temp[i]) >= lval)
@@ -521,7 +523,7 @@ void WaveData::Resolve(vector<float> &srcWave, vector<GaussParameter> &waveParam
 //&waveParam：	该通道的高斯分量参数
 //LM算法参考：	https://blog.csdn.net/shajun0153/article/details/75073137
 */
-void WaveData::Optimize(vector<float> &srcWave, vector<GaussParameter> &waveParam) {
+void WaveData::Optimize(vector<float> &srcWave, vector <GaussParameter> &waveParam) {
     //解算初值为双峰
     if (waveParam.size() == 2) {
         //获取高斯函数参数
@@ -667,7 +669,7 @@ void WaveData::Optimize(vector<float> &srcWave, vector<GaussParameter> &wavePara
 /*功能：	计算水深
 //内容：	提取波峰数目小于两个的直接剔除，否则取第一个（即能量最大值）为水面回波，脉冲时间最晚的为水底回波，计算水深
 */
-void WaveData::CalcuDepth(vector<GaussParameter> &waveParam, float &BorGDepth) {
+void WaveData::CalcuDepth(vector <GaussParameter> &waveParam, float &BorGDepth) {
     if (waveParam.size() <= 1) {
         BorGDepth = 0;
     } else if ((waveParam.size() > 1) && (waveParam.size() < 5)) {
@@ -689,20 +691,44 @@ void WaveData::CalcuDepth(vector<GaussParameter> &waveParam, float &BorGDepth) {
 
         BorGDepth = c * (tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater);
     } else if (waveParam.size() >= 5) {
+        // 校验特殊情况：已确定水表波，水底波时间分布：在水表波后区域数量<水表波前，为无效数据
+        gaussPraIter = waveParam.begin();
+        float check = gaussPraIter->b;
+        // 水表波位置在【140，320】无效
+        if (check >= 140) {
+            BorGDepth = 0;
+            return;
+        }
+        int before = 0;
+        int after = 0;
+        for (gaussPraIter = waveParam.begin() + 1; gaussPraIter != waveParam.end(); gaussPraIter++) {
+            if (gaussPraIter->b > check) {
+                after++;
+            } else {
+                before++;
+            }
+        }
+        if (after + 2 < before) {
+            BorGDepth = 0;
+            return;
+        }
+
+
         gaussPraIter = waveParam.begin();
         float tbegin = gaussPraIter->b;
         gaussPraIter = waveParam.begin() + 1;
         float tend = gaussPraIter->b;
 
+        // 波形过多易受干扰，取其后可能出现的n个波形
         for (gaussPraIter = waveParam.begin() + 1; gaussPraIter != waveParam.end(); gaussPraIter++) {
-            if (gaussPraIter->b > tend) {
+            if (gaussPraIter->b > tend && gaussPraIter->wavetype == BOTTOM && gaussPraIter->b > tbegin) {
                 tend = gaussPraIter->b;
             }
         }
         //gaussPraIter = waveParam.end()-1;			//!!!坑
         //float tend = gaussPraIter->b;
 
-        BorGDepth = c * (tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater);
+        tend > tbegin ? BorGDepth = c * (tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater) : BorGDepth = 0;
     }
 }
 
@@ -725,7 +751,7 @@ ostream &operator<<(ostream &stream, const WaveData &wavedata) {
 
             if (!wavedata.m_BlueGauPra.empty()) {
                 for (auto p : wavedata.m_BlueGauPra) {
-                    stream << " " << p.b;
+                    stream << " " << p.b << (p.wavetype ? "S" : "B");
                 }
             }
             break;
@@ -734,7 +760,7 @@ ostream &operator<<(ostream &stream, const WaveData &wavedata) {
             stream << " " << wavedata.greenDepth << "m";
             if (!wavedata.m_GreenGauPra.empty()) {
                 for (auto p : wavedata.m_GreenGauPra) {
-                    stream << " " << p.b;
+                    stream << " " << p.b << (p.wavetype ? "S" : "B");
                 }
             }
             break;
