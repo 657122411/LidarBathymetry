@@ -22,14 +22,20 @@ int main() {
             cin >> flag;
             switch (flag) {
                 case 0: {
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
                     myfile.readBlueAll();
                     break;
                 }
                 case 1: {
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
                     myfile.readGreenAll();
                     break;
                 }
                 case 2: {
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
                     myfile.readBlueAll();
                     myfile.readGreenAll();
                     break;
@@ -41,18 +47,26 @@ int main() {
                     break;
                 }
                 case 4: {
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
                     myfile.outputData();
                     break;
                 }
                 case 5: {
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
                     myfile.readDeep();
                     break;
                 }
                 case 6: {
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
                     myfile.readDeepByRed();
                     break;
                 }
                 case 7: {
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
                     myfile.readDeepOutLas();
                     break;
                 }
