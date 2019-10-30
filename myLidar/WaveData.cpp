@@ -226,6 +226,130 @@ void jacexpfun4(double *p, double *jac, int m, int n, void *data) {
 }
 
 
+/*功能：	假设五组高斯函数模型
+//*p:	代求参数
+//*x：  原始数据（测量值）
+//m：	参数维度
+//n：	测量值维度
+//*data:？
+*/
+void expfun5(double *p, double *x, int m, int n, void *data) {
+    register int i;
+    for (i = 0; i < n; ++i) {
+        //写出参数与x[i]之间的关系式，由于这里方程的右边没有观测值，所以只有参数
+        x[i] = p[0] * exp(-(i - p[1]) * (i - p[1]) / (2 * p[2]) * (2 * p[2]))
+               + p[3] * exp(-(i - p[4]) * (i - p[4]) / (2 * p[5]) * (2 * p[5]))
+               + p[6] * exp(-(i - p[7]) * (i - p[7]) / (2 * p[8]) * (2 * p[8]))
+               + p[9] * exp(-(i - p[10]) * (i - p[10]) / (2 * p[11]) * (2 * p[11]))
+               + p[12] * exp(-(i - p[13]) * (i - p[13]) / (2 * p[14]) * (2 * p[14]));
+    }
+}
+
+
+/*功能：	五组高斯函数模型的雅可比矩阵
+//*p:	代求参数
+//jac： 雅可比矩阵参数
+//m：	参数维度
+//n：	测量值维度
+//*data:？
+*/
+void jacexpfun5(double *p, double *jac, int m, int n, void *data) {
+    register int i, j;
+    //写出雅克比矩阵
+    for (i = j = 0; i < n; ++i) {
+        jac[j++] = exp(-(i - p[1]) * (i - p[1]) / (2 * p[2]) * p[2]);
+        jac[j++] = p[0] * (i - p[1]) / (p[2] * p[2]) * exp(-(i - p[1]) * (i - p[1]) / (2 * p[2] * p[2]));
+        jac[j++] = p[0] * (i - p[1]) * (i - p[1]) / (p[2] * p[2] * p[2]) *
+                   exp(-(i - p[1]) * (i - p[1]) / (2 * p[2] * p[2]));
+
+        jac[j++] = exp(-(i - p[4]) * (i - p[4]) / (2 * p[5]) * p[5]);
+        jac[j++] = p[3] * (i - p[4]) / (p[5] * p[5]) * exp(-(i - p[4]) * (i - p[4]) / (2 * p[5] * p[5]));
+        jac[j++] = p[3] * (i - p[4]) * (i - p[4]) / (p[5] * p[5] * p[5]) *
+                   exp(-(i - p[4]) * (i - p[4]) / (2 * p[5] * p[5]));
+
+        jac[j++] = exp(-(i - p[7]) * (i - p[7]) / (2 * p[8]) * p[8]);
+        jac[j++] = p[6] * (i - p[7]) / (p[8] * p[8]) * exp(-(i - p[7]) * (i - p[7]) / (2 * p[8] * p[8]));
+        jac[j++] = p[6] * (i - p[7]) * (i - p[7]) / (p[8] * p[8] * p[8]) *
+                   exp(-(i - p[7]) * (i - p[7]) / (2 * p[8] * p[8]));
+
+        jac[j++] = exp(-(i - p[10]) * (i - p[10]) / (2 * p[11]) * p[11]);
+        jac[j++] = p[9] * (i - p[10]) / (p[11] * p[11]) * exp(-(i - p[10]) * (i - p[10]) / (2 * p[11] * p[11]));
+        jac[j++] = p[9] * (i - p[10]) * (i - p[10]) / (p[11] * p[11] * p[11]) *
+                   exp(-(i - p[10]) * (i - p[10]) / (2 * p[11] * p[11]));
+
+        jac[j++] = exp(-(i - p[13]) * (i - p[13]) / (2 * p[14]) * p[14]);
+        jac[j++] = p[12] * (i - p[13]) / (p[14] * p[14]) * exp(-(i - p[13]) * (i - p[13]) / (2 * p[14] * p[14]));
+        jac[j++] = p[12] * (i - p[13]) * (i - p[13]) / (p[14] * p[14] * p[14]) *
+                   exp(-(i - p[13]) * (i - p[13]) / (2 * p[14] * p[14]));
+    }
+}
+
+
+/*功能：	假设六组高斯函数模型
+//*p:	代求参数
+//*x：  原始数据（测量值）
+//m：	参数维度
+//n：	测量值维度
+//*data:？
+*/
+void expfun6(double *p, double *x, int m, int n, void *data) {
+    register int i;
+    for (i = 0; i < n; ++i) {
+        //写出参数与x[i]之间的关系式，由于这里方程的右边没有观测值，所以只有参数
+        x[i] = p[0] * exp(-(i - p[1]) * (i - p[1]) / (2 * p[2]) * (2 * p[2]))
+               + p[3] * exp(-(i - p[4]) * (i - p[4]) / (2 * p[5]) * (2 * p[5]))
+               + p[6] * exp(-(i - p[7]) * (i - p[7]) / (2 * p[8]) * (2 * p[8]))
+               + p[9] * exp(-(i - p[10]) * (i - p[10]) / (2 * p[11]) * (2 * p[11]))
+               + p[12] * exp(-(i - p[13]) * (i - p[13]) / (2 * p[14]) * (2 * p[14]))
+               + p[15] * exp(-(i - p[16]) * (i - p[16]) / (2 * p[17]) * (2 * p[17]));
+    }
+}
+
+
+/*功能：	六组高斯函数模型的雅可比矩阵
+//*p:	代求参数
+//jac： 雅可比矩阵参数
+//m：	参数维度
+//n：	测量值维度
+//*data:？
+*/
+void jacexpfun6(double *p, double *jac, int m, int n, void *data) {
+    register int i, j;
+    //写出雅克比矩阵
+    for (i = j = 0; i < n; ++i) {
+        jac[j++] = exp(-(i - p[1]) * (i - p[1]) / (2 * p[2]) * p[2]);
+        jac[j++] = p[0] * (i - p[1]) / (p[2] * p[2]) * exp(-(i - p[1]) * (i - p[1]) / (2 * p[2] * p[2]));
+        jac[j++] = p[0] * (i - p[1]) * (i - p[1]) / (p[2] * p[2] * p[2]) *
+                   exp(-(i - p[1]) * (i - p[1]) / (2 * p[2] * p[2]));
+
+        jac[j++] = exp(-(i - p[4]) * (i - p[4]) / (2 * p[5]) * p[5]);
+        jac[j++] = p[3] * (i - p[4]) / (p[5] * p[5]) * exp(-(i - p[4]) * (i - p[4]) / (2 * p[5] * p[5]));
+        jac[j++] = p[3] * (i - p[4]) * (i - p[4]) / (p[5] * p[5] * p[5]) *
+                   exp(-(i - p[4]) * (i - p[4]) / (2 * p[5] * p[5]));
+
+        jac[j++] = exp(-(i - p[7]) * (i - p[7]) / (2 * p[8]) * p[8]);
+        jac[j++] = p[6] * (i - p[7]) / (p[8] * p[8]) * exp(-(i - p[7]) * (i - p[7]) / (2 * p[8] * p[8]));
+        jac[j++] = p[6] * (i - p[7]) * (i - p[7]) / (p[8] * p[8] * p[8]) *
+                   exp(-(i - p[7]) * (i - p[7]) / (2 * p[8] * p[8]));
+
+        jac[j++] = exp(-(i - p[10]) * (i - p[10]) / (2 * p[11]) * p[11]);
+        jac[j++] = p[9] * (i - p[10]) / (p[11] * p[11]) * exp(-(i - p[10]) * (i - p[10]) / (2 * p[11] * p[11]));
+        jac[j++] = p[9] * (i - p[10]) * (i - p[10]) / (p[11] * p[11] * p[11]) *
+                   exp(-(i - p[10]) * (i - p[10]) / (2 * p[11] * p[11]));
+
+        jac[j++] = exp(-(i - p[13]) * (i - p[13]) / (2 * p[14]) * p[14]);
+        jac[j++] = p[12] * (i - p[13]) / (p[14] * p[14]) * exp(-(i - p[13]) * (i - p[13]) / (2 * p[14] * p[14]));
+        jac[j++] = p[12] * (i - p[13]) * (i - p[13]) / (p[14] * p[14] * p[14]) *
+                   exp(-(i - p[13]) * (i - p[13]) / (2 * p[14] * p[14]));
+
+        jac[j++] = exp(-(i - p[16]) * (i - p[16]) / (2 * p[17]) * p[17]);
+        jac[j++] = p[15] * (i - p[16]) / (p[17] * p[17]) * exp(-(i - p[16]) * (i - p[16]) / (2 * p[17] * p[17]));
+        jac[j++] = p[15] * (i - p[16]) * (i - p[16]) / (p[17] * p[17] * p[17]) *
+                   exp(-(i - p[16]) * (i - p[16]) / (2 * p[17] * p[17]));
+    }
+}
+
+
 /*
 //功能：构造函数初始化数据
 */
@@ -369,7 +493,7 @@ void WaveData::Filter(vector<float> &srcWave, float &noise) {
 //&srcWave:		通道原始数据
 //&waveParam：	该通道的高斯分量参数
 */
-void WaveData::Resolve(vector<float> &srcWave, vector <GaussParameter> &waveParam, float &noise) {
+void WaveData::Resolve(vector<float> &srcWave, vector<GaussParameter> &waveParam, float &noise) {
     //拷贝原始数据
     float data[320], temp[320];
     int i = 0, m = 0;
@@ -523,143 +647,242 @@ void WaveData::Resolve(vector<float> &srcWave, vector <GaussParameter> &wavePara
 //&waveParam：	该通道的高斯分量参数
 //LM算法参考：	https://blog.csdn.net/shajun0153/article/details/75073137
 */
-void WaveData::Optimize(vector<float> &srcWave, vector <GaussParameter> &waveParam) {
-    //解算初值为双峰
-    if (waveParam.size() == 2) {
-        //获取高斯函数参数
-        double p[6];
-        int i = 0;
-        for (auto gp : waveParam) {
-            p[i++] = gp.A;
-            p[i++] = gp.b;
-            p[i++] = gp.sigma;
+void WaveData::Optimize(vector<float> &srcWave, vector<GaussParameter> &waveParam) {
+    int size = waveParam.size();
+    //解算初值为双峰等情况
+    switch (size) {
+        case 2: {
+            //获取高斯函数参数
+            double p[6];
+            int i = 0;
+            for (auto gp : waveParam) {
+                p[i++] = gp.A;
+                p[i++] = gp.b;
+                p[i++] = gp.sigma;
+            }
+            int m = i;
+            int n = srcWave.size();
+
+            //获取拟合数据
+            double x[320];
+            i = 0;
+            for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
+                x[i] = *iter;
+            }
+
+            double info[LM_INFO_SZ];
+            // 调用迭代入口函数
+            int ret = dlevmar_der(expfun2,    //描述测量值之间关系的函数指针
+                                  jacexpfun2,                    //估计雅克比矩阵的函数指针
+                                  p,                            //初始化的待求参数，结果一并保存在其中
+                                  x,                            //测量值
+                                  m,                            //参数维度
+                                  n,                            //测量值维度
+                                  1000,                        //最大迭代次数
+                                  NULL,                        //opts,       //迭代的一些参数
+                                  info,                        //关于最小化结果的一些参数，不需要设为NULL
+                                  NULL, NULL, NULL            //一些内存的指针，暂时不需要
+            );
+            /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
+            printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
+            printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
+
+            //将优化后的参数组赋给vector
+            i = 0;
+            for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
+                gaussPraIter->A = p[i++];
+                gaussPraIter->b = p[i++];
+                gaussPraIter->sigma = p[i++];
+            }
+
+            break;
         }
-        int m = i;
-        int n = srcWave.size();
+        case 3: {
+            //获取高斯函数参数
+            double p[9];
+            int i = 0;
+            for (auto gp : waveParam) {
+                p[i++] = gp.A;
+                p[i++] = gp.b;
+                p[i++] = gp.sigma;
+            }
+            int m = i;
+            int n = srcWave.size();
 
-        //获取拟合数据
-        double x[320];
-        i = 0;
-        for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
-            x[i] = *iter;
+            //获取拟合数据
+            double x[320];
+            i = 0;
+            for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
+                x[i] = *iter;
+            }
+
+            double info[LM_INFO_SZ];
+            // 调用迭代入口函数
+            int ret = dlevmar_der(expfun3,    //描述测量值之间关系的函数指针
+                                  jacexpfun3,                    //估计雅克比矩阵的函数指针
+                                  p,                            //初始化的待求参数，结果一并保存在其中
+                                  x,                            //测量值
+                                  m,                            //参数维度
+                                  n,                            //测量值维度
+                                  1000,                        //最大迭代次数
+                                  NULL,                        //opts,       //迭代的一些参数
+                                  info,                        //关于最小化结果的一些参数，不需要设为NULL
+                                  NULL, NULL, NULL            //一些内存的指针，暂时不需要
+            );
+            /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
+            printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
+            printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
+
+            //将优化后的参数组赋给vector
+            i = 0;
+            for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
+                gaussPraIter->A = p[i++];
+                gaussPraIter->b = p[i++];
+                gaussPraIter->sigma = p[i++];
+            }
+
+            break;
         }
+        case 4: {
+            //获取高斯函数参数
+            double p[12];
+            int i = 0;
+            for (auto gp : waveParam) {
+                p[i++] = gp.A;
+                p[i++] = gp.b;
+                p[i++] = gp.sigma;
+            }
+            int m = i;
+            int n = srcWave.size();
 
-        double info[LM_INFO_SZ];
-        // 调用迭代入口函数
-        int ret = dlevmar_der(expfun2,    //描述测量值之间关系的函数指针
-                              jacexpfun2,                    //估计雅克比矩阵的函数指针
-                              p,                            //初始化的待求参数，结果一并保存在其中
-                              x,                            //测量值
-                              m,                            //参数维度
-                              n,                            //测量值维度
-                              1000,                        //最大迭代次数
-                              NULL,                        //opts,       //迭代的一些参数
-                              info,                        //关于最小化结果的一些参数，不需要设为NULL
-                              NULL, NULL, NULL            //一些内存的指针，暂时不需要
-        );
-        /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
-        printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
-        printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
+            //获取拟合数据
+            double x[320];
+            i = 0;
+            for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
+                x[i] = *iter;
+            }
 
-        //将优化后的参数组赋给vector
-        i = 0;
-        for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
-            gaussPraIter->A = p[i++];
-            gaussPraIter->b = p[i++];
-            gaussPraIter->sigma = p[i++];
+            double info[LM_INFO_SZ];
+            // 调用迭代入口函数
+            int ret = dlevmar_der(expfun4,    //描述测量值之间关系的函数指针
+                                  jacexpfun4,                    //估计雅克比矩阵的函数指针
+                                  p,                            //初始化的待求参数，结果一并保存在其中
+                                  x,                            //测量值
+                                  m,                            //参数维度
+                                  n,                            //测量值维度
+                                  1000,                        //最大迭代次数
+                                  NULL,                        //opts,       //迭代的一些参数
+                                  info,                        //关于最小化结果的一些参数，不需要设为NULL
+                                  NULL, NULL, NULL            //一些内存的指针，暂时不需要
+            );
+            /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
+            printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
+            printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
+
+            //将优化后的参数组赋给vector
+            i = 0;
+            for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
+                gaussPraIter->A = p[i++];
+                gaussPraIter->b = p[i++];
+                gaussPraIter->sigma = p[i++];
+            }
+
+            break;
         }
-    }
+        case 5: {
+            //获取高斯函数参数
+            double p[15];
+            int i = 0;
+            for (auto gp : waveParam) {
+                p[i++] = gp.A;
+                p[i++] = gp.b;
+                p[i++] = gp.sigma;
+            }
+            int m = i;
+            int n = srcWave.size();
 
-        //解算初值为三个峰
-    else if (waveParam.size() == 3) {
-        //获取高斯函数参数
-        double p[9];
-        int i = 0;
-        for (auto gp : waveParam) {
-            p[i++] = gp.A;
-            p[i++] = gp.b;
-            p[i++] = gp.sigma;
+            //获取拟合数据
+            double x[320];
+            i = 0;
+            for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
+                x[i] = *iter;
+            }
+
+            double info[LM_INFO_SZ];
+            // 调用迭代入口函数
+            int ret = dlevmar_der(expfun5,    //描述测量值之间关系的函数指针
+                                  jacexpfun5,                    //估计雅克比矩阵的函数指针
+                                  p,                            //初始化的待求参数，结果一并保存在其中
+                                  x,                            //测量值
+                                  m,                            //参数维度
+                                  n,                            //测量值维度
+                                  1000,                        //最大迭代次数
+                                  NULL,                        //opts,       //迭代的一些参数
+                                  info,                        //关于最小化结果的一些参数，不需要设为NULL
+                                  NULL, NULL, NULL            //一些内存的指针，暂时不需要
+            );
+            /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
+            printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
+            printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
+
+            //将优化后的参数组赋给vector
+            i = 0;
+            for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
+                gaussPraIter->A = p[i++];
+                gaussPraIter->b = p[i++];
+                gaussPraIter->sigma = p[i++];
+            }
+
+            break;
         }
-        int m = i;
-        int n = srcWave.size();
+        case 6: {
+            //获取高斯函数参数
+            double p[18];
+            int i = 0;
+            for (auto gp : waveParam) {
+                p[i++] = gp.A;
+                p[i++] = gp.b;
+                p[i++] = gp.sigma;
+            }
+            int m = i;
+            int n = srcWave.size();
 
-        //获取拟合数据
-        double x[320];
-        i = 0;
-        for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
-            x[i] = *iter;
+            //获取拟合数据
+            double x[320];
+            i = 0;
+            for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
+                x[i] = *iter;
+            }
+
+            double info[LM_INFO_SZ];
+            // 调用迭代入口函数
+            int ret = dlevmar_der(expfun6,    //描述测量值之间关系的函数指针
+                                  jacexpfun6,                    //估计雅克比矩阵的函数指针
+                                  p,                            //初始化的待求参数，结果一并保存在其中
+                                  x,                            //测量值
+                                  m,                            //参数维度
+                                  n,                            //测量值维度
+                                  1000,                        //最大迭代次数
+                                  NULL,                        //opts,       //迭代的一些参数
+                                  info,                        //关于最小化结果的一些参数，不需要设为NULL
+                                  NULL, NULL, NULL            //一些内存的指针，暂时不需要
+            );
+            /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
+            printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
+            printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
+
+            //将优化后的参数组赋给vector
+            i = 0;
+            for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
+                gaussPraIter->A = p[i++];
+                gaussPraIter->b = p[i++];
+                gaussPraIter->sigma = p[i++];
+            }
+
+            break;
         }
-
-        double info[LM_INFO_SZ];
-        // 调用迭代入口函数
-        int ret = dlevmar_der(expfun3,    //描述测量值之间关系的函数指针
-                              jacexpfun3,                    //估计雅克比矩阵的函数指针
-                              p,                            //初始化的待求参数，结果一并保存在其中
-                              x,                            //测量值
-                              m,                            //参数维度
-                              n,                            //测量值维度
-                              1000,                        //最大迭代次数
-                              NULL,                        //opts,       //迭代的一些参数
-                              info,                        //关于最小化结果的一些参数，不需要设为NULL
-                              NULL, NULL, NULL            //一些内存的指针，暂时不需要
-        );
-        /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
-        printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
-        printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
-
-        //将优化后的参数组赋给vector
-        i = 0;
-        for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
-            gaussPraIter->A = p[i++];
-            gaussPraIter->b = p[i++];
-            gaussPraIter->sigma = p[i++];
-        }
-    }
-
-        //解算初值为四个个峰
-    else if (waveParam.size() == 4) {
-        //获取高斯函数参数
-        double p[12];
-        int i = 0;
-        for (auto gp : waveParam) {
-            p[i++] = gp.A;
-            p[i++] = gp.b;
-            p[i++] = gp.sigma;
-        }
-        int m = i;
-        int n = srcWave.size();
-
-        //获取拟合数据
-        double x[320];
-        i = 0;
-        for (vector<float>::iterator iter = srcWave.begin(); iter != srcWave.end(); ++iter, ++i) {
-            x[i] = *iter;
-        }
-
-        double info[LM_INFO_SZ];
-        // 调用迭代入口函数
-        int ret = dlevmar_der(expfun4,    //描述测量值之间关系的函数指针
-                              jacexpfun4,                    //估计雅克比矩阵的函数指针
-                              p,                            //初始化的待求参数，结果一并保存在其中
-                              x,                            //测量值
-                              m,                            //参数维度
-                              n,                            //测量值维度
-                              1000,                        //最大迭代次数
-                              NULL,                        //opts,       //迭代的一些参数
-                              info,                        //关于最小化结果的一些参数，不需要设为NULL
-                              NULL, NULL, NULL            //一些内存的指针，暂时不需要
-        );
-        /*printf("Levenberg-Marquardt returned in %g iter, reason %g, sumsq %g [%g]\n", info[5], info[6], info[1], info[0]);
-        printf("Bestfit parameters: A:%.7g b:%.7g sigma:%.7g A:%.7g b:%.7g sigma:%.7g\n", p[0], p[1], p[2], p[3], p[4], p[5]);
-        printf("波峰时间差: %.7g ns\n", abs(p[4] - p[1]));*/
-
-        //将优化后的参数组赋给vector
-        i = 0;
-        for (gaussPraIter = waveParam.begin(); gaussPraIter != waveParam.end(); gaussPraIter++) {
-            gaussPraIter->A = p[i++];
-            gaussPraIter->b = p[i++];
-            gaussPraIter->sigma = p[i++];
-        }
+        default:
+            break;
     }
 
     return;
@@ -669,7 +892,7 @@ void WaveData::Optimize(vector<float> &srcWave, vector <GaussParameter> &wavePar
 /*功能：	计算水深
 //内容：	提取波峰数目小于两个的直接剔除，否则取第一个（即能量最大值）为水面回波，脉冲时间最晚的为水底回波，计算水深
 */
-void WaveData::CalcuDepth(vector <GaussParameter> &waveParam, float &BorGDepth) {
+void WaveData::CalcuDepth(vector<GaussParameter> &waveParam, float &BorGDepth) {
     if (waveParam.size() <= 1) {
         BorGDepth = 0;
     } else if ((waveParam.size() > 1) && (waveParam.size() < 5)) {

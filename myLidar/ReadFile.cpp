@@ -280,7 +280,7 @@ void ReadFile::outputData() {
 
     //首先定义流 output_stream  ios::out 示输出,ios::app表示输出到文件尾。
     fstream output_stream;
-    output_stream.open("MixOut.txt", ios::out);
+    output_stream.open("FinalOut.txt", ios::out);
 
     fstream origin;//初始数据
     fstream filter;//滤波数据
@@ -322,7 +322,7 @@ void ReadFile::outputData() {
                     WaveData::ostreamFlag = BLUE;
 
                     //输出原始数据
-                    origin << index << endl;
+                    origin << "<" << index << ">" << endl;
                     for (auto data : mywave.m_BlueWave) {
                         origin << data << " ";
                     }
@@ -331,7 +331,7 @@ void ReadFile::outputData() {
                     mywave.Filter(mywave.m_BlueWave, mywave.m_BlueNoise);
 
                     //输出滤波数据
-                    filter << index << endl;
+                    filter << "<" << index << ">" << endl;
                     for (auto data : mywave.m_BlueWave) {
                         filter << data << " ";
                     }
@@ -340,7 +340,7 @@ void ReadFile::outputData() {
                     mywave.Resolve(mywave.m_BlueWave, mywave.m_BlueGauPra, mywave.m_BlueNoise);
 
                     //输出初解数据
-                    resolve << index << endl;
+                    resolve << "<" << index << ">" << endl;
                     for (int x = 0; x < 320; x++) {
                         int size = mywave.m_BlueGauPra.size();
                         float da = 0;
@@ -356,7 +356,7 @@ void ReadFile::outputData() {
                     mywave.Optimize(mywave.m_BlueWave, mywave.m_BlueGauPra);
 
                     //输出迭代数据
-                    iterate << index << endl;
+                    iterate << "<" << index << ">" << endl;
                     for (int x = 0; x < 320; x++) {
                         int size = mywave.m_BlueGauPra.size();
                         float da = 0;
@@ -375,7 +375,7 @@ void ReadFile::outputData() {
                     WaveData::ostreamFlag = GREEN;
 
                     //输出初始数据
-                    origin << index << endl;
+                    origin << "<" << index << ">" << endl;
                     for (auto data : mywave.m_GreenWave) {
                         filter << data << " ";
                     }
@@ -384,7 +384,7 @@ void ReadFile::outputData() {
                     mywave.Filter(mywave.m_GreenWave, mywave.m_GreenNoise);
 
                     //输出滤波数据
-                    filter << index << endl;
+                    filter << "<" << index << ">" << endl;
                     for (auto data : mywave.m_GreenWave) {
                         filter << data << " ";
                     }
@@ -393,7 +393,7 @@ void ReadFile::outputData() {
                     mywave.Resolve(mywave.m_GreenWave, mywave.m_GreenGauPra, mywave.m_GreenNoise);
 
                     //输出初解数据
-                    resolve << index << endl;
+                    resolve << "<" << index << ">" << endl;
                     for (int x = 0; x < 320; x++) {
                         int size = mywave.m_GreenGauPra.size();
                         float da = 0;
@@ -409,7 +409,7 @@ void ReadFile::outputData() {
                     mywave.Optimize(mywave.m_GreenWave, mywave.m_GreenGauPra);
 
                     //输出迭代数据
-                    iterate << index << endl;
+                    iterate << "<" << index << ">" << endl;
                     for (int x = 0; x < 320; x++) {
                         int size = mywave.m_GreenGauPra.size();
                         float da = 0;
@@ -429,7 +429,7 @@ void ReadFile::outputData() {
             }
 
             //输出信息到文件
-            output_stream << index << " " << mywave;
+            output_stream << "<" << index << ">" << " " << mywave;
 
             //文件指针偏移一帧完整数据的字节数：2688/8
             j += 336;
