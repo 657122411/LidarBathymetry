@@ -276,7 +276,7 @@ void ReadFile::outputData() {
     unsigned long long length;
     fseeko(m_filePtr, 0L, SEEK_END);
     length = ftello(m_filePtr);
-    printf("MixChannelProcessing:");
+    printf("OutputDataProcessing:");
 
     //首先定义流 output_stream  ios::out 示输出,ios::app表示输出到文件尾。
     fstream output_stream;
@@ -286,10 +286,10 @@ void ReadFile::outputData() {
     fstream filter;//滤波数据
     fstream resolve;//初解算数据
     fstream iterate;//迭代数据
-    origin.open("origin.txt", ios::out);
-    filter.open("filter.txt", ios::out);
-    resolve.open("resolve.txt", ios::out);
-    iterate.open("iterate.txt", ios::out);
+    origin.open("Origin.txt", ios::out);
+    filter.open("Filter.txt", ios::out);
+    resolve.open("Resolve.txt", ios::out);
+    iterate.open("Iterate.txt", ios::out);
 
     int bgflag;
     float blueStd, greenStd;
@@ -317,119 +317,129 @@ void ReadFile::outputData() {
 
             blueStd >= 1.2 * greenStd ? bgflag = BLUE : bgflag = GREEN;//判断阈值
 
+            //输出两个通道内各自的数据
+            //===========Blue start===============
+            WaveData::ostreamFlag = BLUE;
+
+            //输出原始数据
+            origin << "<" << index << "B" << ">" << endl;
+            for (auto data : mywave.m_BlueWave) {
+                origin << data << " ";
+            }
+            origin << endl;
+
+            mywave.Filter(mywave.m_BlueWave, mywave.m_BlueNoise);
+
+            //输出滤波数据
+            filter << "<" << index << "B" << ">" << endl;
+            for (auto data : mywave.m_BlueWave) {
+                filter << data << " ";
+            }
+            filter << endl;
+
+            mywave.Resolve(mywave.m_BlueWave, mywave.m_BlueGauPra, mywave.m_BlueNoise);
+
+            //输出初解数据
+            resolve << "<" << index << "B" << ">" << endl;
+            for (int x = 0; x < 320; x++) {
+                int size = mywave.m_BlueGauPra.size();
+                float da = 0;
+                for (int i = 0; i < size; i++) {
+                    da += mywave.m_BlueGauPra[i].A *
+                          exp(-(x - mywave.m_BlueGauPra[i].b) * (x - mywave.m_BlueGauPra[i].b) /
+                              (2 * (mywave.m_BlueGauPra[i].sigma) * (mywave.m_BlueGauPra[i].sigma)));
+                }
+                resolve << da << " ";
+            }
+            resolve << endl;
+
+            mywave.Optimize(mywave.m_BlueWave, mywave.m_BlueGauPra);
+
+            //输出迭代数据
+            iterate << "<" << index << "B" << ">" << endl;
+            for (int x = 0; x < 320; x++) {
+                int size = mywave.m_BlueGauPra.size();
+                float da = 0;
+                for (int i = 0; i < size; i++) {
+                    da += mywave.m_BlueGauPra[i].A *
+                          exp(-(x - mywave.m_BlueGauPra[i].b) * (x - mywave.m_BlueGauPra[i].b) /
+                              (2 * (mywave.m_BlueGauPra[i].sigma) * (mywave.m_BlueGauPra[i].sigma)));
+                }
+                iterate << da << " ";
+            }
+            iterate << endl;
+            //==========Blue end================
+
+
+            //==========Green start=============
+            WaveData::ostreamFlag = GREEN;
+
+            //输出初始数据
+            origin << "<" << index << "G" << ">" << endl;
+            for (auto data : mywave.m_GreenWave) {
+                origin << data << " ";
+            }
+            origin << endl;
+
+            mywave.Filter(mywave.m_GreenWave, mywave.m_GreenNoise);
+
+            //输出滤波数据
+            filter << "<" << index << "G" << ">" << endl;
+            for (auto data : mywave.m_GreenWave) {
+                filter << data << " ";
+            }
+            filter << endl;
+
+            mywave.Resolve(mywave.m_GreenWave, mywave.m_GreenGauPra, mywave.m_GreenNoise);
+
+            //输出初解数据
+            resolve << "<" << index << "G" << ">" << endl;
+            for (int x = 0; x < 320; x++) {
+                int size = mywave.m_GreenGauPra.size();
+                float da = 0;
+                for (int i = 0; i < size; i++) {
+                    da += mywave.m_GreenGauPra[i].A *
+                          exp(-(x - mywave.m_GreenGauPra[i].b) * (x - mywave.m_GreenGauPra[i].b) /
+                              (2 * (mywave.m_GreenGauPra[i].sigma) * (mywave.m_GreenGauPra[i].sigma)));
+                }
+                resolve << da << " ";
+            }
+            resolve << endl;
+
+            mywave.Optimize(mywave.m_GreenWave, mywave.m_GreenGauPra);
+
+            //输出迭代数据
+            iterate << "<" << index << "G" << ">" << endl;
+            for (int x = 0; x < 320; x++) {
+                int size = mywave.m_GreenGauPra.size();
+                float da = 0;
+                for (int i = 0; i < size; i++) {
+                    da += mywave.m_GreenGauPra[i].A *
+                          exp(-(x - mywave.m_GreenGauPra[i].b) * (x - mywave.m_GreenGauPra[i].b) /
+                              (2 * (mywave.m_GreenGauPra[i].sigma) * (mywave.m_GreenGauPra[i].sigma)));
+                }
+                iterate << da << " ";
+            }
+            iterate << endl;
+            //============Green end============
+
+            //输出解算信息中选取的具体通道
             switch (bgflag) {
                 case BLUE:
-                    WaveData::ostreamFlag = BLUE;
-
-                    //输出原始数据
-                    origin << "<" << index << ">" << endl;
-                    for (auto data : mywave.m_BlueWave) {
-                        origin << data << " ";
-                    }
-                    origin << endl;
-
-                    mywave.Filter(mywave.m_BlueWave, mywave.m_BlueNoise);
-
-                    //输出滤波数据
-                    filter << "<" << index << ">" << endl;
-                    for (auto data : mywave.m_BlueWave) {
-                        filter << data << " ";
-                    }
-                    filter << endl;
-
-                    mywave.Resolve(mywave.m_BlueWave, mywave.m_BlueGauPra, mywave.m_BlueNoise);
-
-                    //输出初解数据
-                    resolve << "<" << index << ">" << endl;
-                    for (int x = 0; x < 320; x++) {
-                        int size = mywave.m_BlueGauPra.size();
-                        float da = 0;
-                        for (int i = 0; i < size; i++) {
-                            da += mywave.m_BlueGauPra[i].A *
-                                  exp(-(x - mywave.m_BlueGauPra[i].b) * (x - mywave.m_BlueGauPra[i].b) /
-                                      (2 * (mywave.m_BlueGauPra[i].sigma) * (mywave.m_BlueGauPra[i].sigma)));
-                        }
-                        resolve << da << " ";
-                    }
-                    resolve << endl;
-
-                    mywave.Optimize(mywave.m_BlueWave, mywave.m_BlueGauPra);
-
-                    //输出迭代数据
-                    iterate << "<" << index << ">" << endl;
-                    for (int x = 0; x < 320; x++) {
-                        int size = mywave.m_BlueGauPra.size();
-                        float da = 0;
-                        for (int i = 0; i < size; i++) {
-                            da += mywave.m_BlueGauPra[i].A *
-                                  exp(-(x - mywave.m_BlueGauPra[i].b) * (x - mywave.m_BlueGauPra[i].b) /
-                                      (2 * (mywave.m_BlueGauPra[i].sigma) * (mywave.m_BlueGauPra[i].sigma)));
-                        }
-                        iterate << da << " ";
-                    }
-                    iterate << endl;
-
                     mywave.CalcuDepth(mywave.m_BlueGauPra, mywave.blueDepth);
+                    //输出信息到文件
+                    output_stream << "<" << index << ">" << " " << "B" << " " << mywave;
+
                     break;
                 case GREEN:
-                    WaveData::ostreamFlag = GREEN;
-
-                    //输出初始数据
-                    origin << "<" << index << ">" << endl;
-                    for (auto data : mywave.m_GreenWave) {
-                        filter << data << " ";
-                    }
-                    filter << endl;
-
-                    mywave.Filter(mywave.m_GreenWave, mywave.m_GreenNoise);
-
-                    //输出滤波数据
-                    filter << "<" << index << ">" << endl;
-                    for (auto data : mywave.m_GreenWave) {
-                        filter << data << " ";
-                    }
-                    filter << endl;
-
-                    mywave.Resolve(mywave.m_GreenWave, mywave.m_GreenGauPra, mywave.m_GreenNoise);
-
-                    //输出初解数据
-                    resolve << "<" << index << ">" << endl;
-                    for (int x = 0; x < 320; x++) {
-                        int size = mywave.m_GreenGauPra.size();
-                        float da = 0;
-                        for (int i = 0; i < size; i++) {
-                            da += mywave.m_GreenGauPra[i].A *
-                                  exp(-(x - mywave.m_GreenGauPra[i].b) * (x - mywave.m_GreenGauPra[i].b) /
-                                      (2 * (mywave.m_GreenGauPra[i].sigma) * (mywave.m_GreenGauPra[i].sigma)));
-                        }
-                        resolve << da << " ";
-                    }
-                    resolve << endl;
-
-                    mywave.Optimize(mywave.m_GreenWave, mywave.m_GreenGauPra);
-
-                    //输出迭代数据
-                    iterate << "<" << index << ">" << endl;
-                    for (int x = 0; x < 320; x++) {
-                        int size = mywave.m_GreenGauPra.size();
-                        float da = 0;
-                        for (int i = 0; i < size; i++) {
-                            da += mywave.m_GreenGauPra[i].A *
-                                  exp(-(x - mywave.m_GreenGauPra[i].b) * (x - mywave.m_GreenGauPra[i].b) /
-                                      (2 * (mywave.m_GreenGauPra[i].sigma) * (mywave.m_GreenGauPra[i].sigma)));
-                        }
-                        iterate << da << " ";
-                    }
-                    iterate << endl;
-
                     mywave.CalcuDepth(mywave.m_GreenGauPra, mywave.greenDepth);
+                    //输出信息到文件
+                    output_stream << "<" << index << ">" << " " << "G" << " " << mywave;
+
                     break;
                 default:
                     break;
             }
-
-            //输出信息到文件
-            output_stream << "<" << index << ">" << " " << mywave;
 
             //文件指针偏移一帧完整数据的字节数：2688/8
             j += 336;
@@ -663,7 +673,7 @@ void ReadFile::readDeepOutLas() {
 
     //首先定义流 output_stream  ios::out 示输出,ios::app表示输出到文件尾。
     fstream las_stream;
-    las_stream.open("las2txt.txt", ios::out);
+    las_stream.open("Las2Txt.txt", ios::out);
 
     int bgflag;
     float blueStd, greenStd;
