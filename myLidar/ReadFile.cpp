@@ -341,6 +341,24 @@ void ReadFile::outputData() {
 
             //输出初解数据
             resolve << "<" << index << "B" << ">" << endl;
+            //输出高斯分量参数
+            for (auto data : mywave.m_BlueGauPra) {
+                resolve << data.A << " " << data.b << " " << data.sigma << " ";
+            }
+            resolve << endl;
+            //输出子峰
+            int sizeB = mywave.m_BlueGauPra.size();
+            for (int k = 0; k < sizeB; k++) {
+                resolve << "Component" << k + 1 << endl;
+                for (int i = 0; i < 320; ++i) {
+                    resolve << mywave.m_BlueGauPra[k].A *
+                               exp(-(i - mywave.m_BlueGauPra[k].b) * (i - mywave.m_BlueGauPra[k].b) /
+                                   (2 * (mywave.m_BlueGauPra[k].sigma) * (mywave.m_BlueGauPra[k].sigma))) << " ";
+                }
+                resolve << endl;
+            }
+            //输出总量信息
+            resolve << "Sum" << endl;
             for (int x = 0; x < 320; x++) {
                 int size = mywave.m_BlueGauPra.size();
                 float da = 0;
@@ -357,6 +375,24 @@ void ReadFile::outputData() {
 
             //输出迭代数据
             iterate << "<" << index << "B" << ">" << endl;
+            //输出高斯分量参数
+            for (auto data : mywave.m_BlueGauPra) {
+                iterate << data.A << " " << data.b << " " << data.sigma << " ";
+            }
+            iterate << endl;
+            //输出子峰
+            //int sizeB = mywave.m_BlueGauPra.size();
+            for (int k = 0; k < sizeB; k++) {
+                iterate << "Component" << k + 1 << endl;
+                for (int i = 0; i < 320; ++i) {
+                    iterate << mywave.m_BlueGauPra[k].A *
+                               exp(-(i - mywave.m_BlueGauPra[k].b) * (i - mywave.m_BlueGauPra[k].b) /
+                                   (2 * (mywave.m_BlueGauPra[k].sigma) * (mywave.m_BlueGauPra[k].sigma))) << " ";
+                }
+                iterate << endl;
+            }
+            //输出总量信息
+            iterate << "Sum" << endl;
             for (int x = 0; x < 320; x++) {
                 int size = mywave.m_BlueGauPra.size();
                 float da = 0;
@@ -394,6 +430,24 @@ void ReadFile::outputData() {
 
             //输出初解数据
             resolve << "<" << index << "G" << ">" << endl;
+            //输出高斯分量参数
+            for (auto data : mywave.m_GreenGauPra) {
+                resolve << data.A << " " << data.b << " " << data.sigma << " ";
+            }
+            resolve << endl;
+            //输出子峰
+            int sizeG = mywave.m_GreenGauPra.size();
+            for (int k = 0; k < sizeG; k++) {
+                resolve << "Component" << k + 1 << endl;
+                for (int i = 0; i < 320; ++i) {
+                    resolve << mywave.m_GreenGauPra[k].A *
+                               exp(-(i - mywave.m_GreenGauPra[k].b) * (i - mywave.m_GreenGauPra[k].b) /
+                                   (2 * (mywave.m_GreenGauPra[k].sigma) * (mywave.m_GreenGauPra[k].sigma))) << " ";
+                }
+                resolve << endl;
+            }
+            //输出总量信息
+            resolve << "Sum" << endl;
             for (int x = 0; x < 320; x++) {
                 int size = mywave.m_GreenGauPra.size();
                 float da = 0;
@@ -410,6 +464,24 @@ void ReadFile::outputData() {
 
             //输出迭代数据
             iterate << "<" << index << "G" << ">" << endl;
+            //输出高斯分量参数
+            for (auto data : mywave.m_GreenGauPra) {
+                iterate << data.A << " " << data.b << " " << data.sigma << " ";
+            }
+            iterate << endl;
+            //输出子峰
+            //int sizeB = mywave.m_BlueGauPra.size();
+            for (int k = 0; k < sizeG; k++) {
+                iterate << "Component" << k + 1 << endl;
+                for (int i = 0; i < 320; ++i) {
+                    iterate << mywave.m_GreenGauPra[k].A *
+                               exp(-(i - mywave.m_GreenGauPra[k].b) * (i - mywave.m_GreenGauPra[k].b) /
+                                   (2 * (mywave.m_GreenGauPra[k].sigma) * (mywave.m_GreenGauPra[k].sigma))) << " ";
+                }
+                iterate << endl;
+            }
+            //输出总量信息
+            iterate << "Sum" << endl;
             for (int x = 0; x < 320; x++) {
                 int size = mywave.m_GreenGauPra.size();
                 float da = 0;
