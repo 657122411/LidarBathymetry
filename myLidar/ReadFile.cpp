@@ -500,13 +500,20 @@ void ReadFile::outputData() {
                 case BLUE:
                     mywave.CalcuDepth(mywave.m_BlueGauPra, mywave.blueDepth);
                     //输出信息到文件
-                    output_stream << "<" << index << ">" << " " << "B" << " " << mywave;
+                    output_stream << "<" << index << ">" << " " << "B" << " " << mywave.blueDepth << "m ";
+                    for (auto data : mywave.m_BlueGauPra) {
+                        output_stream << data.A << " " << data.b << " " << data.sigma << " ";
+                    }
+                    output_stream << endl;
 
                     break;
                 case GREEN:
                     mywave.CalcuDepth(mywave.m_GreenGauPra, mywave.greenDepth);
-                    //输出信息到文件
-                    output_stream << "<" << index << ">" << " " << "G" << " " << mywave;
+                    output_stream << "<" << index << ">" << " " << "G" << " " << mywave.greenDepth << "m ";
+                    for (auto data : mywave.m_GreenGauPra) {
+                        output_stream << data.A << " " << data.b << " " << data.sigma << " ";
+                    }
+                    output_stream << endl;
 
                     break;
                 default:
