@@ -280,7 +280,7 @@ void ReadFile::outputData() {
 
     //首先定义流 output_stream  ios::out 示输出,ios::app表示输出到文件尾。
     fstream output_stream;
-    output_stream.open("FinalOut.txt", ios::out);
+    output_stream.open("Final.txt", ios::out);
 
     fstream origin;//初始数据
     fstream filter;//滤波数据
@@ -500,7 +500,15 @@ void ReadFile::outputData() {
                 case BLUE:
                     mywave.CalcuDepth(mywave.m_BlueGauPra, mywave.blueDepth);
                     //输出信息到文件
-                    output_stream << "<" << index << ">" << " " << "B" << " " << mywave.blueDepth << "m ";
+                    output_stream << "<" << index << ">" << " "
+                                  << mywave.m_time.year << " "
+                                  << mywave.m_time.month << " "
+                                  << mywave.m_time.day << " "
+                                  << mywave.m_time.hour << " "
+                                  << mywave.m_time.minute << " "
+                                  << mywave.m_time.second << " "
+                                  << "B" << " "
+                                  << mywave.blueDepth << "m ";
                     for (auto data : mywave.m_BlueGauPra) {
                         output_stream << data.A << " " << data.b << " " << data.sigma << " ";
                     }
@@ -509,7 +517,15 @@ void ReadFile::outputData() {
                     break;
                 case GREEN:
                     mywave.CalcuDepth(mywave.m_GreenGauPra, mywave.greenDepth);
-                    output_stream << "<" << index << ">" << " " << "G" << " " << mywave.greenDepth << "m ";
+                    output_stream << "<" << index << ">" << " "
+                                  << mywave.m_time.year << " "
+                                  << mywave.m_time.month << " "
+                                  << mywave.m_time.day << " "
+                                  << mywave.m_time.hour << " "
+                                  << mywave.m_time.minute << " "
+                                  << mywave.m_time.second << " "
+                                  << "G" << " "
+                                  << mywave.greenDepth << "m ";
                     for (auto data : mywave.m_GreenGauPra) {
                         output_stream << data.A << " " << data.b << " " << data.sigma << " ";
                     }
