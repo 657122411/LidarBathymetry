@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/myLidar/DeepWave.cpp" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/myLidar/DeepWave.h" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/myLidar/HS_Lidar.cpp" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/myLidar/HS_Lidar_Header.h" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/myLidar/WaveData.cpp" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/myLidar/WaveData.h" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/myLidar/myLidar.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/myLidar/cpp/DeepWave.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/myLidar/cpp/HS_Lidar.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/myLidar/cpp/WaveData.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/myLidar/cpp/myLidar.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/myLidar/header/DeepWave.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/myLidar/header/HS_Lidar_Header.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/myLidar/header/WaveData.h" charset="GBK" />
     <file url="PROJECT" charset="GBK" />
   </component>
 </project>

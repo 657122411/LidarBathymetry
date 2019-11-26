@@ -1,4 +1,4 @@
-#include "WaveData.h"
+#include "../header/WaveData.h"
 #include <numeric>
 
 #define PulseWidth 4        //定义激光脉冲宽度做剥离阈值参考
@@ -992,4 +992,21 @@ ostream &operator<<(ostream &stream, const WaveData &wavedata) {
 
     stream << endl;
     return stream;
+}
+
+
+/*功能：	普通高斯分解计算水深
+//内容：	取两波峰差绝对值直接计算
+*/
+void WaveData::CalcuDepthByGauss(vector<GaussParameter> &waveParam, float &BorGDepth) {
+    if (waveParam.size() <= 1) {
+        BorGDepth = 0;
+    } else if ((waveParam.size() > 1) && (waveParam.size() < 5)) {
+        gaussPraIter = waveParam.begin();
+        float tbegin = gaussPraIter->b;
+        gaussPraIter = waveParam.begin() + 1;
+        float tend = gaussPraIter->b;
+
+        BorGDepth = c * abs(tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater);
+    }
 }

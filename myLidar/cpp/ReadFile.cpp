@@ -1,4 +1,4 @@
-#include "ReadFile.h"
+#include "../header/ReadFile.h"
 
 #define BLUE true
 #define GREEN false
@@ -264,7 +264,7 @@ void ReadFile::readMix() {
 }
 
 
-/*功能：	输出原始数据，滤波后数据，初始解数据，迭代后数据
+/*功能：	输出原始数据，滤波后数据，初始解数据，迭代后数据以及原始高斯分解法结果
 //out:	4files
 */
 void ReadFile::outputData() {
@@ -286,10 +286,13 @@ void ReadFile::outputData() {
     fstream filter;//滤波数据
     fstream resolve;//初解算数据
     fstream iterate;//迭代数据
+    fstream gaussB;//传统解法蓝通道
+    fstream gaussG;//传统解法绿通道
     origin.open("Origin.txt", ios::out);
     filter.open("Filter.txt", ios::out);
     resolve.open("Resolve.txt", ios::out);
-    iterate.open("Iterate.txt", ios::out);
+    gaussB.open("GaussB.txt", ios::out);
+    gaussG.open("GaussG.txt", ios::out);
 
     int bgflag;
     float blueStd, greenStd;
@@ -371,9 +374,26 @@ void ReadFile::outputData() {
             }
             resolve << endl;
 
-            mywave.Optimize(mywave.m_BlueWave, mywave.m_BlueGauPra);
+
+            //输出普通的高斯分解法得到结果
+            mywave.CalcuDepthByGauss(mywave.m_BlueGauPra, mywave.blueDepth);
+            gaussB << "<" << index << ">" << " "
+                   << mywave.m_time.year << " "
+                   << mywave.m_time.month << " "
+                   << mywave.m_time.day << " "
+                   << mywave.m_time.hour << " "
+                   << mywave.m_time.minute << " "
+                   << mywave.m_time.second << " "
+                   << "B" << " "
+                   << mywave.blueDepth << "m ";
+            for (auto data : mywave.m_BlueGauPra) {
+                gaussB << data.A << " " << data.b << " " << data.sigma << " ";
+            }
+            gaussB << endl;
+
 
             //输出迭代数据
+            mywave.Optimize(mywave.m_BlueWave, mywave.m_BlueGauPra);
             iterate << "<" << index << "B" << ">" << endl;
             //输出高斯分量参数
             for (auto data : mywave.m_BlueGauPra) {
@@ -460,9 +480,24 @@ void ReadFile::outputData() {
             }
             resolve << endl;
 
-            mywave.Optimize(mywave.m_GreenWave, mywave.m_GreenGauPra);
+            //输出普通的高斯分解法得到结果
+            mywave.CalcuDepthByGauss(mywave.m_GreenGauPra, mywave.greenDepth);
+            gaussG << "<" << index << ">" << " "
+                   << mywave.m_time.year << " "
+                   << mywave.m_time.month << " "
+                   << mywave.m_time.day << " "
+                   << mywave.m_time.hour << " "
+                   << mywave.m_time.minute << " "
+                   << mywave.m_time.second << " "
+                   << "B" << " "
+                   << mywave.greenDepth << "m ";
+            for (auto data : mywave.m_GreenGauPra) {
+                gaussG << data.A << " " << data.b << " " << data.sigma << " ";
+            }
+            gaussG << endl;
 
             //输出迭代数据
+            mywave.Optimize(mywave.m_GreenWave, mywave.m_GreenGauPra);
             iterate << "<" << index << "G" << ">" << endl;
             //输出高斯分量参数
             for (auto data : mywave.m_GreenGauPra) {

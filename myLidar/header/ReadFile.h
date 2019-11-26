@@ -3,7 +3,6 @@
 #include <iostream>
 #include "WaveData.h"
 #include "DeepWave.h"
-#include "PhotonData.h"
 #include <iomanip>
 
 using namespace std;

@@ -1,4 +1,4 @@
-#include "DeepWave.h"
+#include "../header/DeepWave.h"
 #include <numeric>
 #include <algorithm>
 
