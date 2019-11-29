@@ -3,6 +3,7 @@ cmake_minimum_required( VERSION 3.5 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14" )
 
+#包含LM解算需要的levmar库的所在路径
 include_directories(/Users/taojianhao/CLionProjects/myLidar/myLidar/levmar)
 
 set(SOURCES

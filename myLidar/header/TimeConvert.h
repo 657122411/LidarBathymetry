@@ -9,7 +9,7 @@ typedef struct Time {
     int hour;
     int minute;
     int second;
-};
+} UTCTIME;
 
 //Õ®”√ ±
 typedef struct tagCOMMONTIME {

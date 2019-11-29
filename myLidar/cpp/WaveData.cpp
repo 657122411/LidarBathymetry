@@ -65,10 +65,10 @@ void gaussian(float src[], float dst[]) {
 
 
 /*功能：	计算数据的标准差
-//*:
+//:
 //resultSet：传入的数据数组
 //stdev：	返回值为标准差
-//*
+//
 */
 float calculateSigma(vector<float> resultSet) {
     double sum = std::accumulate(std::begin(resultSet), std::end(resultSet), 0.0);
@@ -86,11 +86,11 @@ float calculateSigma(vector<float> resultSet) {
 
 
 /*功能：	假设两组高斯函数模型
-//*p:	代求参数
-//*x：  原始数据（测量值）
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// *x：  原始数据（测量值）
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void expfun2(double *p, double *x, int m, int n, void *data) {
     register int i;
@@ -103,11 +103,11 @@ void expfun2(double *p, double *x, int m, int n, void *data) {
 
 
 /*功能：	两组高斯函数模型的雅可比矩阵
-//*p:	代求参数
-//jac： 雅可比矩阵参数
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// jac： 雅可比矩阵参数
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void jacexpfun2(double *p, double *jac, int m, int n, void *data) {
     register int i, j;
@@ -127,11 +127,11 @@ void jacexpfun2(double *p, double *jac, int m, int n, void *data) {
 
 
 /*功能：	假设三组高斯函数模型
-//*p:	代求参数
-//*x：  原始数据（测量值）
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// *x：  原始数据（测量值）
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void expfun3(double *p, double *x, int m, int n, void *data) {
     register int i;
@@ -145,11 +145,11 @@ void expfun3(double *p, double *x, int m, int n, void *data) {
 
 
 /*功能：	三组高斯函数模型的雅可比矩阵
-//*p:	代求参数
-//jac： 雅可比矩阵参数
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// jac： 雅可比矩阵参数
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void jacexpfun3(double *p, double *jac, int m, int n, void *data) {
     register int i, j;
@@ -174,11 +174,11 @@ void jacexpfun3(double *p, double *jac, int m, int n, void *data) {
 
 
 /*功能：	假设四组高斯函数模型
-//*p:	代求参数
-//*x：  原始数据（测量值）
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// *x：  原始数据（测量值）
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void expfun4(double *p, double *x, int m, int n, void *data) {
     register int i;
@@ -193,11 +193,11 @@ void expfun4(double *p, double *x, int m, int n, void *data) {
 
 
 /*功能：	四组高斯函数模型的雅可比矩阵
-//*p:	代求参数
-//jac： 雅可比矩阵参数
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// jac： 雅可比矩阵参数
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void jacexpfun4(double *p, double *jac, int m, int n, void *data) {
     register int i, j;
@@ -227,11 +227,11 @@ void jacexpfun4(double *p, double *jac, int m, int n, void *data) {
 
 
 /*功能：	假设五组高斯函数模型
-//*p:	代求参数
-//*x：  原始数据（测量值）
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// *x：  原始数据（测量值）
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void expfun5(double *p, double *x, int m, int n, void *data) {
     register int i;
@@ -247,11 +247,11 @@ void expfun5(double *p, double *x, int m, int n, void *data) {
 
 
 /*功能：	五组高斯函数模型的雅可比矩阵
-//*p:	代求参数
-//jac： 雅可比矩阵参数
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// jac： 雅可比矩阵参数
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void jacexpfun5(double *p, double *jac, int m, int n, void *data) {
     register int i, j;
@@ -286,11 +286,11 @@ void jacexpfun5(double *p, double *jac, int m, int n, void *data) {
 
 
 /*功能：	假设六组高斯函数模型
-//*p:	代求参数
-//*x：  原始数据（测量值）
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// *x：  原始数据（测量值）
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void expfun6(double *p, double *x, int m, int n, void *data) {
     register int i;
@@ -307,11 +307,11 @@ void expfun6(double *p, double *x, int m, int n, void *data) {
 
 
 /*功能：	六组高斯函数模型的雅可比矩阵
-//*p:	代求参数
-//jac： 雅可比矩阵参数
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// jac： 雅可比矩阵参数
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void jacexpfun6(double *p, double *jac, int m, int n, void *data) {
     register int i, j;
@@ -372,7 +372,7 @@ WaveData::~WaveData() {
 
 
 /*功能：	提取原始数据中的兴趣区域数据
-//*&hs:	原始Lidar数据
+//&hs:	原始Lidar数据
 */
 void WaveData::GetData(HS_Lidar &hs) {
     //GPS->UTC->BeiJing
@@ -999,14 +999,13 @@ ostream &operator<<(ostream &stream, const WaveData &wavedata) {
 //内容：	取两波峰差绝对值直接计算
 */
 void WaveData::CalcuDepthByGauss(vector<GaussParameter> &waveParam, float &BorGDepth) {
-    if (waveParam.size() <= 1) {
-        BorGDepth = 0;
-    } else if ((waveParam.size() > 1) && (waveParam.size() < 5)) {
+    if ((waveParam.size() > 1) && (waveParam.size() < 7)) {
         gaussPraIter = waveParam.begin();
         float tbegin = gaussPraIter->b;
-        gaussPraIter = waveParam.begin() + 1;
+        gaussPraIter = waveParam.end() - 1;
         float tend = gaussPraIter->b;
-
         BorGDepth = c * abs(tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater);
+    } else {
+        BorGDepth = 0;
     }
 }

@@ -177,10 +177,8 @@ void cubicSmooth7(float in[], float out[], int N) {
 
 
 /*功能：	计算数据的标准差
-//*:
 //resultSet：传入的数据数组
 //stdev：	返回值为标准差
-//*
 */
 float calculateDeepSigma(vector<float> resultSet) {
     double sum = std::accumulate(std::begin(resultSet), std::end(resultSet), 0.0);
@@ -330,11 +328,11 @@ FindLocalMaxima(vector<float> dataVector, int minProminence, int maxProminence, 
 
 
 /*功能：	假设两组高斯函数模型
-//*p:	代求参数
-//*x：  原始数据（测量值）
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// *x：  原始数据（测量值）
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void deep_expfun2(double *p, double *x, int m, int n, void *data) {
     register int i;
@@ -347,11 +345,11 @@ void deep_expfun2(double *p, double *x, int m, int n, void *data) {
 
 
 /*功能：	两组高斯函数模型的雅可比矩阵
-//*p:	代求参数
-//jac： 雅可比矩阵参数
-//m：	参数维度
-//n：	测量值维度
-//*data:？
+// *p:	代求参数
+// jac： 雅可比矩阵参数
+// m：	参数维度
+// n：	测量值维度
+// *data:？
 */
 void deep_jacexpfun2(double *p, double *jac, int m, int n, void *data) {
     register int i, j;
@@ -484,13 +482,13 @@ void DeepWave::DeepFilter(vector<float> &srcWave, float &noise) {
 
 
     //释放内存
-    delete buffer;
+    delete[]buffer;
     buffer = nullptr;
-    delete buffer1;
+    delete[]buffer1;
     buffer1 = nullptr;
-    delete buffer2;
+    delete[]buffer2;
     buffer2 = nullptr;
-    delete buffer3;
+    delete[]buffer3;
     buffer3 = nullptr;
 
     noise = 0;

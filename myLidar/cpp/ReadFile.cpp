@@ -489,7 +489,7 @@ void ReadFile::outputData() {
                    << mywave.m_time.hour << " "
                    << mywave.m_time.minute << " "
                    << mywave.m_time.second << " "
-                   << "B" << " "
+                   << "G" << " "
                    << mywave.greenDepth << "m ";
             for (auto data : mywave.m_GreenGauPra) {
                 gaussG << data.A << " " << data.b << " " << data.sigma << " ";
