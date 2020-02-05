@@ -33,25 +33,30 @@ public:
 
     ~WaveData();
 
-    void GetData(HS_Lidar &hs);                                                //截取兴趣数据
-    void Filter(vector<float> &srcWave, float &noise);                        //滤波平滑
+    void GetData(HS_Lidar &hs);                        //截取兴趣数据
+    void Filter(vector<float> &srcWave, float &noise); //滤波平滑
     void Resolve(vector<float> &srcWave, vector<GaussParameter> &waveParam, float &noise);    //分解高斯分量参数
     void Optimize(vector<float> &srcWave, vector<GaussParameter> &waveParam);//迭代优化（LM）
 
     static bool ostreamFlag;                                                //控制流输出的兴趣通道数据
-    friend ostream &operator<<(ostream &stream, const WaveData &wavedata);    //自定义输出信息
+    friend ostream &operator<<(ostream &stream, const WaveData &wavedata);  //自定义输出信息
 
-    Time m_time;                                    //UTC时间
+    Time m_time;                                     //UTC时间
     vector<float> m_BlueWave;                        //CH2通道数据
-    vector<float> m_GreenWave;                        //CH3通道数据
-    float m_BlueNoise;                                //CH2通道的随机噪声
-    float m_GreenNoise;                                //CH3通道的随机噪声
-    vector<GaussParameter> m_BlueGauPra;            //CH2数据高斯分量参数
-    vector<GaussParameter> m_GreenGauPra;            //CH3数据高斯分量参数
-    vector<GaussParameter>::iterator gaussPraIter;    //高斯参数结构体迭代器
+    vector<float> m_GreenWave;                       //CH3通道数据
 
-    float blueDepth;                                //CH2通道的计算水深
+    vector<float> afterGauss;                        //分解完后的320个点
+    vector<float> afterLM;                           //LM完后的320个点
+    void CalcuAfter(vector<GaussParameter> &waveParam, vector<float> &after);
+
+    float m_BlueNoise;                               //CH2通道的随机噪声
+    float m_GreenNoise;                              //CH3通道的随机噪声
+    vector<GaussParameter> m_BlueGauPra;             //CH2数据高斯分量参数
+    vector<GaussParameter> m_GreenGauPra;            //CH3数据高斯分量参数
+    vector<GaussParameter>::iterator gaussPraIter;   //高斯参数结构体迭代器
+
+    float blueDepth;                                 //CH2通道的计算水深
     float greenDepth;                                //CH3通道的计算水深
-    void CalcuDepth(vector<GaussParameter> &waveParam, float &BorGDepth);    //根据回波数据计算水深
-    void CalcuDepthByGauss(vector<GaussParameter> &waveParam, float &BorGDepth);    //普通高斯分解
+    void CalcuDepth(vector<GaussParameter> &waveParam, float &BorGDepth);      //根据回波数据计算水深
+    void CalcuDepthByGauss(vector<GaussParameter> &waveParam, float &BorGDepth);//普通高斯分解
 };

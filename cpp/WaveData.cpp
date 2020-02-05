@@ -364,10 +364,10 @@ WaveData::WaveData() {
 
 WaveData::~WaveData() {
     //手动释放vector内存，不知道有没有必要性
-    vector<float>().swap(m_BlueWave);
-    vector<float>().swap(m_GreenWave);
-    vector<GaussParameter>().swap(m_BlueGauPra);
-    vector<GaussParameter>().swap(m_GreenGauPra);
+//    vector<float>().swap(m_BlueWave);
+//    vector<float>().swap(m_GreenWave);
+//    vector<GaussParameter>().swap(m_BlueGauPra);
+//    vector<GaussParameter>().swap(m_GreenGauPra);
 }
 
 
@@ -1007,5 +1007,19 @@ void WaveData::CalcuDepthByGauss(vector<GaussParameter> &waveParam, float &BorGD
         BorGDepth = c * abs(tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater);
     } else {
         BorGDepth = 0;
+    }
+}
+
+void WaveData::CalcuAfter(vector<GaussParameter> &waveParam, vector<float> &after) {
+
+    for (int i = 0; i < 320; ++i) {
+        float ans = 0;
+        int size = waveParam.size();
+        for (int j = 0; j < size; ++j) {
+            ans += waveParam.at(j).A * exp(-(i - waveParam.at(j).b) * (i - waveParam.at(j).b) /
+                                           (2 * waveParam.at(j).sigma * waveParam.at(j).sigma));
+        }
+
+        after.push_back(ans);
     }
 }

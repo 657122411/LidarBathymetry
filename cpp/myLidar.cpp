@@ -17,8 +17,9 @@ int main() {
         ReadFile myfile;
         bool ret = myfile.setFilename(name);
         if (ret) {
-            cout << "Channel?(0:Blue/1:Green/2:All/3:Mix/4:OutputData/5:ReadDeep/6:ReadDeepByRed/7:ReadDeepOutLas):"
-                 << endl;
+            cout
+                    << "Channel?\n0:Blue/\n1:Green/\n2:All/\n3:Mix/\n4:OutputData/\n5:ReadDeep/\n6:ReadDeepByRed/\n7:ReadDeepOutLas/\n8:DataAnalysis/\n"
+                    << endl;
             cin >> flag;
             switch (flag) {
                 case 0: {
@@ -71,7 +72,9 @@ int main() {
                     break;
                 }
                 case 8: {
-                    myfile.readPhoton();
+                    cout << "Incidence angle?" << endl;
+                    cin >> Theta;
+                    myfile.dataAnalysis();
                     break;
                 }
             }

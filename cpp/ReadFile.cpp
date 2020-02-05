@@ -1,4 +1,5 @@
 #include "../header/ReadFile.h"
+#include <map>
 
 #define BLUE true
 #define GREEN false
@@ -914,25 +915,346 @@ void ReadFile::readDeepOutLas() {
 
 
 /**
- * 单光子数据
+ * 分析数据：输出不同水深分布的波形数 高斯分解与LM优化前后的平均差方差
  */
-void ReadFile::readPhoton() {
+void ReadFile::dataAnalysis() {
     unsigned long long j = 0;
+    HS_Lidar hs;
 
+    //把文件的位置指针移到文件尾获取文件长度
+    unsigned long long length;
+    fseeko(m_filePtr, 0L, SEEK_END);
+    length = ftello(m_filePtr);
+    printf("DataAnalysising:");
 
+    //首先定义流 output_stream  ios::out 示输出,ios::app表示输出到文件尾。
+    fstream output_stream;
+    output_stream.open("Analysis.txt", ios::out);
+
+    int bgflag;
+    float blueStd, greenStd;
+
+    //数据分析容器
+    //十米内水深分布数
+    int depthCount[10] = {0};
+    //分布的波形数
+    int depthComponetSize[10] = {0};
+    //高斯分解后平均差
+    float GauAvgDiff[10] = {0};
+    //高斯分解后方差
+    float GauVariance[10] = {0};
+    //lm后平均差
+    float LmAvgDiff[10] = {0};
+    //lm后方差
+    float LmVariance[10] = {0};
+
+    //遍历文件获取数据
     do {
-        fseeko(m_filePtr, j * 32, SEEK_SET);
-        bitset<32> data;
-        memset(&data, 0, sizeof(bitset<32>));
-        fread(&data, sizeof(bitset<32>), 1, m_filePtr);
+        fseeko(m_filePtr, j * 8, SEEK_SET);
 
-        if (data == 00000000) {
-            cout << "hi";
+        //寻找帧头
+        uint8_t header[8];
+        memset(header, 0, sizeof(uint8_t) * 8);
+        fread(header, sizeof(uint8_t), 8, m_filePtr);
+        if (isHeaderRight(header)) {
+            //处理数据的流程：
+            fseeko(m_filePtr, -8, SEEK_CUR);
+            hs.initData(m_filePtr);
+
+            WaveData mywave;
+            mywave.GetData(hs);
+
+            //截取时间范围
+            if (!inDuration(mywave.m_time)) {
+                //文件指针偏移一帧完整数据的字节数：2688/8
+                j += 336;
+
+                //打印处理进程情况设置宽度输出精度
+                printf("%5.2f%%", (float) j / (length / 800));
+                printf("\b\b\b\b\b\b");
+                continue;
+            }
+
+            blueStd = calculateSigma(mywave.m_BlueWave);
+            greenStd = calculateSigma(mywave.m_GreenWave);
+
+            blueStd >= 1.2 * greenStd ? bgflag = BLUE : bgflag = GREEN;//判断阈值
+
+            float gauAvgDiff;
+            float gauVariance;
+            float lmAvgDiff;
+            float lmVariance;
+
+            switch (bgflag) {
+                case BLUE:
+                    WaveData::ostreamFlag = BLUE;
+
+                    mywave.Filter(mywave.m_BlueWave, mywave.m_BlueNoise);
+                    mywave.Resolve(mywave.m_BlueWave, mywave.m_BlueGauPra, mywave.m_BlueNoise);
+                    mywave.CalcuAfter(mywave.m_BlueGauPra, mywave.afterGauss);
+                    gauAvgDiff = calcuAvgDiff(mywave.m_BlueWave, mywave.afterGauss);
+                    gauVariance = calcuVariance(mywave.afterGauss, gauAvgDiff);
+
+                    mywave.Optimize(mywave.m_BlueWave, mywave.m_BlueGauPra);
+                    mywave.CalcuAfter(mywave.m_BlueGauPra, mywave.afterLM);
+                    lmAvgDiff = calcuAvgDiff(mywave.afterGauss, mywave.afterLM);
+                    lmVariance = calcuVariance(mywave.afterLM, lmAvgDiff);
+
+                    mywave.CalcuDepth(mywave.m_BlueGauPra, mywave.blueDepth);
+
+                    //统计
+                    if (mywave.blueDepth > 0 && mywave.blueDepth <= 1.0) {
+                        depthCount[0]++;
+                        depthComponetSize[0] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[0] += gauAvgDiff;
+                        GauVariance[0] += gauVariance;
+                        LmAvgDiff[0] += lmAvgDiff;
+                        LmVariance[0] += lmVariance;
+                    } else if (mywave.blueDepth > 1 && mywave.blueDepth <= 2.0) {
+                        depthCount[1]++;
+                        depthComponetSize[1] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[1] += gauAvgDiff;
+                        GauVariance[1] += gauVariance;
+                        LmAvgDiff[1] += lmAvgDiff;
+                        LmVariance[1] += lmVariance;
+                    } else if (mywave.blueDepth > 2 && mywave.blueDepth <= 3.0) {
+                        depthCount[2]++;
+                        depthComponetSize[2] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[2] += gauAvgDiff;
+                        GauVariance[2] += gauVariance;
+                        LmAvgDiff[2] += lmAvgDiff;
+                        LmVariance[2] += lmVariance;
+                    } else if (mywave.blueDepth > 3 && mywave.blueDepth <= 4.0) {
+                        depthCount[3]++;
+                        depthComponetSize[3] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[3] += gauAvgDiff;
+                        GauVariance[3] += gauVariance;
+                        LmAvgDiff[3] += lmAvgDiff;
+                        LmVariance[3] += lmVariance;
+                    } else if (mywave.blueDepth > 4 && mywave.blueDepth <= 5.0) {
+                        depthCount[4]++;
+                        depthComponetSize[4] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[4] += gauAvgDiff;
+                        GauVariance[4] += gauVariance;
+                        LmAvgDiff[4] += lmAvgDiff;
+                        LmVariance[4] += lmVariance;
+                    } else if (mywave.blueDepth > 5 && mywave.blueDepth <= 6.0) {
+                        depthCount[5]++;
+                        depthComponetSize[5] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[5] += gauAvgDiff;
+                        GauVariance[5] += gauVariance;
+                        LmAvgDiff[5] += lmAvgDiff;
+                        LmVariance[5] += lmVariance;
+                    } else if (mywave.blueDepth > 6 && mywave.blueDepth <= 7.0) {
+                        depthCount[6]++;
+                        depthComponetSize[6] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[6] += gauAvgDiff;
+                        GauVariance[6] += gauVariance;
+                        LmAvgDiff[6] += lmAvgDiff;
+                        LmVariance[6] += lmVariance;
+                    } else if (mywave.blueDepth > 7 && mywave.blueDepth <= 8.0) {
+                        depthCount[7]++;
+                        depthComponetSize[7] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[7] += gauAvgDiff;
+                        GauVariance[7] += gauVariance;
+                        LmAvgDiff[7] += lmAvgDiff;
+                        LmVariance[7] += lmVariance;
+                    } else if (mywave.blueDepth > 8 && mywave.blueDepth <= 9.0) {
+                        depthCount[8]++;
+                        depthComponetSize[8] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[8] += gauAvgDiff;
+                        GauVariance[8] += gauVariance;
+                        LmAvgDiff[8] += lmAvgDiff;
+                        LmVariance[8] += lmVariance;
+                    } else if (mywave.blueDepth > 9 && mywave.blueDepth <= 10.0) {
+                        depthCount[9]++;
+                        depthComponetSize[9] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[9] += gauAvgDiff;
+                        GauVariance[9] += gauVariance;
+                        LmAvgDiff[9] += lmAvgDiff;
+                        LmVariance[9] += lmVariance;
+                    }
+
+                    break;
+                case GREEN:
+                    WaveData::ostreamFlag = GREEN;
+
+                    mywave.Filter(mywave.m_GreenWave, mywave.m_GreenNoise);
+                    mywave.Resolve(mywave.m_GreenWave, mywave.m_GreenGauPra, mywave.m_GreenNoise);
+                    mywave.CalcuAfter(mywave.m_GreenGauPra, mywave.afterGauss);
+                    gauAvgDiff = calcuAvgDiff(mywave.m_GreenWave, mywave.afterGauss);
+                    gauVariance = calcuVariance(mywave.afterGauss, gauAvgDiff);
+
+                    mywave.Optimize(mywave.m_GreenWave, mywave.m_GreenGauPra);
+                    mywave.CalcuAfter(mywave.m_GreenGauPra, mywave.afterLM);
+                    lmAvgDiff = calcuAvgDiff(mywave.afterGauss, mywave.afterLM);
+                    lmVariance = calcuVariance(mywave.afterLM, lmAvgDiff);
+
+                    mywave.CalcuDepth(mywave.m_GreenGauPra, mywave.greenDepth);
+
+                    //统计
+                    if (mywave.greenDepth > 0 && mywave.greenDepth <= 1.0) {
+                        depthCount[0]++;
+                        depthComponetSize[0] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[0] += gauAvgDiff;
+                        GauVariance[0] += gauVariance;
+                        LmAvgDiff[0] += lmAvgDiff;
+                        LmVariance[0] += lmVariance;
+                    } else if (mywave.greenDepth > 1 && mywave.greenDepth <= 2.0) {
+                        depthCount[1]++;
+                        depthComponetSize[1] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[1] += gauAvgDiff;
+                        GauVariance[1] += gauVariance;
+                        LmAvgDiff[1] += lmAvgDiff;
+                        LmVariance[1] += lmVariance;
+                    } else if (mywave.greenDepth > 2 && mywave.greenDepth <= 3.0) {
+                        depthCount[2]++;
+                        depthComponetSize[2] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[2] += gauAvgDiff;
+                        GauVariance[2] += gauVariance;
+                        LmAvgDiff[2] += lmAvgDiff;
+                        LmVariance[2] += lmVariance;
+                    } else if (mywave.greenDepth > 3 && mywave.greenDepth <= 4.0) {
+                        depthCount[3]++;
+                        depthComponetSize[3] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[3] += gauAvgDiff;
+                        GauVariance[3] += gauVariance;
+                        LmAvgDiff[3] += lmAvgDiff;
+                        LmVariance[3] += lmVariance;
+                    } else if (mywave.greenDepth > 4 && mywave.greenDepth <= 5.0) {
+                        depthCount[4]++;
+                        depthComponetSize[4] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[4] += gauAvgDiff;
+                        GauVariance[4] += gauVariance;
+                        LmAvgDiff[4] += lmAvgDiff;
+                        LmVariance[4] += lmVariance;
+                    } else if (mywave.greenDepth > 5 && mywave.greenDepth <= 6.0) {
+                        depthCount[5]++;
+                        depthComponetSize[5] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[5] += gauAvgDiff;
+                        GauVariance[5] += gauVariance;
+                        LmAvgDiff[5] += lmAvgDiff;
+                        LmVariance[5] += lmVariance;
+                    } else if (mywave.greenDepth > 6 && mywave.greenDepth <= 7.0) {
+                        depthCount[6]++;
+                        depthComponetSize[6] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[6] += gauAvgDiff;
+                        GauVariance[6] += gauVariance;
+                        LmAvgDiff[6] += lmAvgDiff;
+                        LmVariance[6] += lmVariance;
+                    } else if (mywave.greenDepth > 7 && mywave.greenDepth <= 8.0) {
+                        depthCount[7]++;
+                        depthComponetSize[7] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[7] += gauAvgDiff;
+                        GauVariance[7] += gauVariance;
+                        LmAvgDiff[7] += lmAvgDiff;
+                        LmVariance[7] += lmVariance;
+                    } else if (mywave.greenDepth > 8 && mywave.greenDepth <= 9.0) {
+                        depthCount[8]++;
+                        depthComponetSize[8] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[8] += gauAvgDiff;
+                        GauVariance[8] += gauVariance;
+                        LmAvgDiff[8] += lmAvgDiff;
+                        LmVariance[8] += lmVariance;
+                    } else if (mywave.greenDepth > 9 && mywave.greenDepth <= 10.0) {
+                        depthCount[9]++;
+                        depthComponetSize[9] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[9] += gauAvgDiff;
+                        GauVariance[9] += gauVariance;
+                        LmAvgDiff[9] += lmAvgDiff;
+                        LmVariance[9] += lmVariance;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+
+            //文件指针偏移一帧完整数据的字节数：2688/8
+            j += 336;
+
+            //打印处理进程情况设置宽度输出精度
+            printf("%5.2f%%", (float) j / (length / 800));
+            printf("\b\b\b\b\b\b");
+
+        } else {
+            //可能会多出二段回波数据：uint16_t[CH.nL1] -> 2*n
+            j += 2;
         }
-
-        j++;
 
     } while (!feof(m_filePtr));
 
+    for (int i = 0; i < 10; ++i) {
+        output_stream << i << " depthCount " << depthCount[i] << " depthComponetSize " << depthComponetSize[i]
+                      << " AVG " << (float) depthComponetSize[i] / depthCount[i] << endl;
+    }
 
+    for (int i = 0; i < 10; ++i) {
+        output_stream << i << " GauAvgDiff " << GauAvgDiff[i] << " GauVariance " << GauVariance[i]
+                      << " AVG " << GauAvgDiff[i] / depthCount[i] << " " << GauVariance[i] / depthCount[i] << endl;
+    }
+
+    for (int i = 0; i < 10; ++i) {
+        output_stream << i << " LmAvgDiff " << LmAvgDiff[i] << " LmVariance " << LmVariance[i]
+                      << " AVG " << LmAvgDiff[i] / depthCount[i] << " " << LmVariance[i] / depthCount[i] << endl;
+    }
+
+    //文件结束退出
+    if (feof(m_filePtr) == 1) {
+
+        output_stream.close();
+        printf("finished!\n");
+    }
 }
+
+/**
+ * 判断是否需要处理
+ * @param time 数据现在utc时间
+ * @return bool
+ */
+bool ReadFile::inDuration(Time time) {
+    Time start = {2018, 5, 29, 12, 20, 0};
+    Time end = {2018, 5, 29, 12, 33, 59};
+    return time.year >= start.year && time.year <= end.year
+           && time.month >= start.month && time.month <= end.month
+           && time.day >= start.day && time.day <= end.day
+           && time.hour >= start.hour && time.hour <= end.hour
+           && time.minute >= start.minute && time.minute <= end.minute
+           && time.second >= start.second && time.second <= end.second;
+}
+
+/**
+ * 计算平均差
+ * @param v1 数组1
+ * @param v2 数据2
+ * @return float
+ */
+float ReadFile::calcuAvgDiff(vector<float> &v1, vector<float> &v2) {
+    float ret = 0.0;
+    if (v1.size() == 320 && v2.size() == 320) {
+        for (std::vector<int>::size_type i = 0; i != v1.size(); i++) {
+            ret += v1[i] - v2[i];
+        }
+        return ret / 320;
+    }
+    return ret;
+}
+
+/**
+ * 计算方差
+ * @param v1 数组
+ * @param avg 平均值
+ * @return float
+ */
+float ReadFile::calcuVariance(vector<float> &v1, float avg) {
+    float ret = 0;
+    if (v1.size() == 320) {
+        for (std::vector<int>::size_type i = 0; i != v1.size(); i++) {
+            ret += pow((v1[i] - avg), 2);
+        }
+        return ret / 320;
+    }
+    return ret;
+}
+
