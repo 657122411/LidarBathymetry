@@ -36,7 +36,7 @@ public:
 
     float calcuAvgDiff(vector<float> &v1, vector<float> &v2);
 
-    float calcuVariance(vector<float> &v1, float avg);
+    float calcuVariance(vector<float> &v);
 
 private:
     char *m_filename;
