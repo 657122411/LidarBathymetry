@@ -36,7 +36,13 @@ public:
 
     float calcuAvgDiff(vector<float> &v1, vector<float> &v2);
 
-    float calcuVariance(vector<float> &v);
+    float calcuVariance(vector<float> &v1, vector<float> &v2, float avg);
+
+    float getDiffA(int index, vector<GaussParameter> &v1, vector<GaussParameter> &v2);
+
+    float getDiffU(int index, vector<GaussParameter> &v1, vector<GaussParameter> &v2);
+
+    float getDiffSigma(int index, vector<GaussParameter> &v1, vector<GaussParameter> &v2);
 
 private:
     char *m_filename;

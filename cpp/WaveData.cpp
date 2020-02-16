@@ -956,6 +956,85 @@ void WaveData::CalcuDepth(vector<GaussParameter> &waveParam, float &BorGDepth) {
 }
 
 
+/**
+ * 功能同上，记录水面水底分量所在索引
+ * @param waveParam 高斯分量组
+ * @param BorGDepth 输出水深
+ * @param index 索引位置
+ */
+void WaveData::CalcuDepthOutIndex(vector<GaussParameter> &waveParam, float &BorGDepth, int *index) {
+    index[0] = -1;
+    index[1] = -1;
+    int a = 0, b = 0;
+    if (waveParam.size() <= 1) {
+        BorGDepth = 0;
+    } else if ((waveParam.size() > 1) && (waveParam.size() < 5)) {
+        gaussPraIter = waveParam.begin();
+        float tbegin = gaussPraIter->b;
+        float tend = tbegin;
+
+        for (gaussPraIter = waveParam.begin() + 1; gaussPraIter != waveParam.end(); gaussPraIter++) {
+            b++;
+            if ((gaussPraIter->b > tend) &&
+                (gaussPraIter->wavetype == BOTTOM))//水底回波必定出现在水表回波的后续时刻，为与底部返回噪声区别，假定其与水面回波的回波时差在两个波峰内（考虑水体后向散射）
+            {
+                tend = gaussPraIter->b;
+                break;
+            }
+        }
+        //gaussPraIter = waveParam.end()-1;			//!!!坑
+        //float tend = gaussPraIter->b;
+
+        BorGDepth = c * (tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater);
+        index[0] = a;
+        index[1] = b;
+    } else if (waveParam.size() >= 5) {
+        // 校验特殊情况：已确定水表波，水底波时间分布：在水表波后区域数量<水表波前，为无效数据
+        gaussPraIter = waveParam.begin();
+        float check = gaussPraIter->b;
+        // 水表波位置在【140，320】无效
+        if (check >= 140) {
+            BorGDepth = 0;
+            return;
+        }
+        int before = 0;
+        int after = 0;
+        for (gaussPraIter = waveParam.begin() + 1; gaussPraIter != waveParam.end(); gaussPraIter++) {
+            if (gaussPraIter->b > check) {
+                after++;
+            } else {
+                before++;
+            }
+        }
+        if (after + 2 < before) {
+            BorGDepth = 0;
+            return;
+        }
+
+
+        gaussPraIter = waveParam.begin();
+        float tbegin = gaussPraIter->b;
+        gaussPraIter = waveParam.begin() + 1;
+        float tend = gaussPraIter->b;
+
+        // 波形过多易受干扰，取其后可能出现的n个波形
+        for (gaussPraIter = waveParam.begin() + 1; gaussPraIter != waveParam.end(); gaussPraIter++) {
+            b++;
+            if (gaussPraIter->b > tend && gaussPraIter->wavetype == BOTTOM && gaussPraIter->b > tbegin) {
+                tend = gaussPraIter->b;
+            }
+        }
+        //gaussPraIter = waveParam.end()-1;			//!!!坑
+        //float tend = gaussPraIter->b;
+
+        tend > tbegin ? BorGDepth = c * (tend - tbegin) * cos(asin(sin(Theta) / nwater)) / (2 * nwater) : BorGDepth = 0;
+        index[0] = a;
+        index[1] = b;
+        return;
+    }
+}
+
+
 /*功能：	自定义需要输出的信息
 //内容：	年 月 日 时 分 秒
 */
