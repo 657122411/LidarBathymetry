@@ -44,6 +44,8 @@ public:
 
     float getDiffSigma(int index, vector<GaussParameter> &v1, vector<GaussParameter> &v2);
 
+    float getEnergy(vector<GaussParameter> &v, int start, int end);
+
 private:
     char *m_filename;
     FILE *m_filePtr;

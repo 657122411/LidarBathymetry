@@ -939,6 +939,10 @@ void ReadFile::dataAnalysis() {
     int depthCount[10] = {0};
     //分布的波形数
     int depthComponetSize[10] = {0};
+    //后向散射分布的波形数
+    int backComponetSize[10] = {0};
+    //后向散射波形能量
+    float backComponetSum[10] = {0};
     //高斯分解后平均差
     float GauAvgDiff[10] = {0};
     //高斯分解前后方差
@@ -1034,6 +1038,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[0] += diffA1;
                         DiffU1[0] += diffU1;
                         DiffSigma1[0] += diffSigma1;
+                        backComponetSize[0] += (index[1] - index[0] - 1);
+                        backComponetSum[0] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 1 && mywave.blueDepth <= 2.0) {
                         depthCount[1]++;
                         depthComponetSize[1] += mywave.m_BlueGauPra.size();
@@ -1047,6 +1053,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[1] += diffA1;
                         DiffU1[1] += diffU1;
                         DiffSigma1[1] += diffSigma1;
+                        backComponetSize[1] += (index[1] - index[0] - 1);
+                        backComponetSum[1] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 2 && mywave.blueDepth <= 3.0) {
                         depthCount[2]++;
                         depthComponetSize[2] += mywave.m_BlueGauPra.size();
@@ -1060,6 +1068,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[2] += diffA1;
                         DiffU1[2] += diffU1;
                         DiffSigma1[2] += diffSigma1;
+                        backComponetSize[2] += (index[1] - index[0] - 1);
+                        backComponetSum[2] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 3 && mywave.blueDepth <= 4.0) {
                         depthCount[3]++;
                         depthComponetSize[3] += mywave.m_BlueGauPra.size();
@@ -1073,6 +1083,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[3] += diffA1;
                         DiffU1[3] += diffU1;
                         DiffSigma1[3] += diffSigma1;
+                        backComponetSize[3] += (index[1] - index[0] - 1);
+                        backComponetSum[3] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 4 && mywave.blueDepth <= 5.0) {
                         depthCount[4]++;
                         depthComponetSize[4] += mywave.m_BlueGauPra.size();
@@ -1086,6 +1098,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[4] += diffA1;
                         DiffU1[4] += diffU1;
                         DiffSigma1[4] += diffSigma1;
+                        backComponetSize[4] += (index[1] - index[0] - 1);
+                        backComponetSum[4] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 5 && mywave.blueDepth <= 6.0) {
                         depthCount[5]++;
                         depthComponetSize[5] += mywave.m_BlueGauPra.size();
@@ -1099,6 +1113,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[5] += diffA1;
                         DiffU1[5] += diffU1;
                         DiffSigma1[5] += diffSigma1;
+                        backComponetSize[5] += (index[1] - index[0] - 1);
+                        backComponetSum[5] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 6 && mywave.blueDepth <= 7.0) {
                         depthCount[6]++;
                         depthComponetSize[6] += mywave.m_BlueGauPra.size();
@@ -1112,6 +1128,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[6] += diffA1;
                         DiffU1[6] += diffU1;
                         DiffSigma1[6] += diffSigma1;
+                        backComponetSize[6] += (index[1] - index[0] - 1);
+                        backComponetSum[6] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 7 && mywave.blueDepth <= 8.0) {
                         depthCount[7]++;
                         depthComponetSize[7] += mywave.m_BlueGauPra.size();
@@ -1125,6 +1143,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[7] += diffA1;
                         DiffU1[7] += diffU1;
                         DiffSigma1[7] += diffSigma1;
+                        backComponetSize[7] += (index[1] - index[0] - 1);
+                        backComponetSum[7] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 8 && mywave.blueDepth <= 9.0) {
                         depthCount[8]++;
                         depthComponetSize[8] += mywave.m_BlueGauPra.size();
@@ -1138,6 +1158,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[8] += diffA1;
                         DiffU1[8] += diffU1;
                         DiffSigma1[8] += diffSigma1;
+                        backComponetSize[8] += (index[1] - index[0] - 1);
+                        backComponetSum[8] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     } else if (mywave.blueDepth > 9 && mywave.blueDepth <= 10.0) {
                         depthCount[9]++;
                         depthComponetSize[9] += mywave.m_BlueGauPra.size();
@@ -1151,6 +1173,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[9] += diffA1;
                         DiffU1[9] += diffU1;
                         DiffSigma1[9] += diffSigma1;
+                        backComponetSize[9] += (index[1] - index[0] - 1);
+                        backComponetSum[9] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     }
 
                     break;
@@ -1192,6 +1216,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[0] += diffA1;
                         DiffU1[0] += diffU1;
                         DiffSigma1[0] += diffSigma1;
+                        backComponetSize[0] += (index[1] - index[0] - 1);
+                        backComponetSum[0] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 1 && mywave.greenDepth <= 2.0) {
                         depthCount[1]++;
                         depthComponetSize[1] += mywave.m_GreenGauPra.size();
@@ -1205,6 +1231,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[1] += diffA1;
                         DiffU1[1] += diffU1;
                         DiffSigma1[1] += diffSigma1;
+                        backComponetSize[1] += (index[1] - index[0] - 1);
+                        backComponetSum[1] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 2 && mywave.greenDepth <= 3.0) {
                         depthCount[2]++;
                         depthComponetSize[2] += mywave.m_GreenGauPra.size();
@@ -1218,6 +1246,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[2] += diffA1;
                         DiffU1[2] += diffU1;
                         DiffSigma1[2] += diffSigma1;
+                        backComponetSize[2] += (index[1] - index[0] - 1);
+                        backComponetSum[2] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 3 && mywave.greenDepth <= 4.0) {
                         depthCount[3]++;
                         depthComponetSize[3] += mywave.m_GreenGauPra.size();
@@ -1231,6 +1261,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[3] += diffA1;
                         DiffU1[3] += diffU1;
                         DiffSigma1[3] += diffSigma1;
+                        backComponetSize[3] += (index[1] - index[0] - 1);
+                        backComponetSum[3] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 4 && mywave.greenDepth <= 5.0) {
                         depthCount[4]++;
                         depthComponetSize[4] += mywave.m_GreenGauPra.size();
@@ -1244,6 +1276,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[4] += diffA1;
                         DiffU1[4] += diffU1;
                         DiffSigma1[4] += diffSigma1;
+                        backComponetSize[4] += (index[1] - index[0] - 1);
+                        backComponetSum[4] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 5 && mywave.greenDepth <= 6.0) {
                         depthCount[5]++;
                         depthComponetSize[5] += mywave.m_GreenGauPra.size();
@@ -1257,6 +1291,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[5] += diffA1;
                         DiffU1[5] += diffU1;
                         DiffSigma1[5] += diffSigma1;
+                        backComponetSize[5] += (index[1] - index[0] - 1);
+                        backComponetSum[5] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 6 && mywave.greenDepth <= 7.0) {
                         depthCount[6]++;
                         depthComponetSize[6] += mywave.m_GreenGauPra.size();
@@ -1270,6 +1306,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[6] += diffA1;
                         DiffU1[6] += diffU1;
                         DiffSigma1[6] += diffSigma1;
+                        backComponetSize[6] += (index[1] - index[0] - 1);
+                        backComponetSum[6] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 7 && mywave.greenDepth <= 8.0) {
                         depthCount[7]++;
                         depthComponetSize[7] += mywave.m_GreenGauPra.size();
@@ -1283,6 +1321,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[7] += diffA1;
                         DiffU1[7] += diffU1;
                         DiffSigma1[7] += diffSigma1;
+                        backComponetSize[7] += (index[1] - index[0] - 1);
+                        backComponetSum[7] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 8 && mywave.greenDepth <= 9.0) {
                         depthCount[8]++;
                         depthComponetSize[8] += mywave.m_GreenGauPra.size();
@@ -1296,6 +1336,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[8] += diffA1;
                         DiffU1[8] += diffU1;
                         DiffSigma1[8] += diffSigma1;
+                        backComponetSize[8] += (index[1] - index[0] - 1);
+                        backComponetSum[8] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     } else if (mywave.greenDepth > 9 && mywave.greenDepth <= 10.0) {
                         depthCount[9]++;
                         depthComponetSize[9] += mywave.m_GreenGauPra.size();
@@ -1309,6 +1351,8 @@ void ReadFile::dataAnalysis() {
                         DiffA1[9] += diffA1;
                         DiffU1[9] += diffU1;
                         DiffSigma1[9] += diffSigma1;
+                        backComponetSize[9] += (index[1] - index[0] - 1);
+                        backComponetSum[9] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     }
 
                     break;
@@ -1331,7 +1375,10 @@ void ReadFile::dataAnalysis() {
 
     for (int i = 0; i < 10; ++i) {
         output_stream << i << " depthCount " << depthCount[i] << " depthComponetSize " << depthComponetSize[i]
-                      << " AVG " << (float) depthComponetSize[i] / depthCount[i] << endl;
+                      << " AVG " << (float) depthComponetSize[i] / depthCount[i]
+                      << " backAvgSize " << (float) backComponetSize[i] / depthCount[i]
+                      << " backAvgEnergy " << backComponetSum[i] / depthCount[i]
+                      << endl;
     }
 
     for (int i = 0; i < 10; ++i) {
@@ -1445,3 +1492,20 @@ float ReadFile::getDiffSigma(int index, vector<GaussParameter> &v1, vector<Gauss
     return ret;
 }
 
+/**
+ * 计算后向散射波形能量和
+ * @param v 高斯分量组
+ * @param start 后向散射起始索引
+ * @param end 终止索引
+ * @return float
+ */
+float ReadFile::getEnergy(vector<GaussParameter> &v, int start, int end) {
+    float ans = 0.0;
+    for (int i = 0; i < 320; ++i) {
+        for (int j = start + 1; j < end; ++j) {
+            ans += v.at(j).A * exp(-(i - v.at(j).b) * (i - v.at(j).b) /
+                                   (2 * v.at(j).sigma * v.at(j).sigma));
+        }
+    }
+    return ans;
+}
