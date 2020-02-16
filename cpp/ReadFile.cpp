@@ -600,7 +600,7 @@ void ReadFile::outputData() {
 
 
 /*功能：	读取深水数据
-//out:	
+//out:
 */
 void ReadFile::readDeep() {
     unsigned long long j = 0;
@@ -788,7 +788,7 @@ void ReadFile::readDeepByRed() {
 }
 
 
-/*功能：	
+/*功能：
 //out:
 */
 void ReadFile::readDeepOutLas() {
@@ -998,6 +998,7 @@ void ReadFile::dataAnalysis() {
             float diffA0, diffA1, diffU0, diffU1, diffSigma0, diffSigma1;
             vector<GaussParameter> init;
             int index[2];
+            int range = 0;
 
             switch (bgflag) {
                 case BLUE:
@@ -1024,157 +1025,23 @@ void ReadFile::dataAnalysis() {
                     diffSigma0 = getDiffSigma(index[0], init, mywave.m_BlueGauPra);
                     diffSigma1 = getDiffSigma(index[1], init, mywave.m_BlueGauPra);
 
-                    //统计
-                    if (mywave.blueDepth > 0 && mywave.blueDepth <= 1.0) {
-                        depthCount[0]++;
-                        depthComponetSize[0] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[0] += gauAvgDiff;
-                        GauVariance[0] += gauVariance;
-                        LmAvgDiff[0] += lmAvgDiff;
-                        LmVariance[0] += lmVariance;
-                        DiffA0[0] += diffA0;
-                        DiffU0[0] += diffU0;
-                        DiffSigma0[0] += diffSigma0;
-                        DiffA1[0] += diffA1;
-                        DiffU1[0] += diffU1;
-                        DiffSigma1[0] += diffSigma1;
-                        backComponetSize[0] += (index[1] - index[0] - 1);
-                        backComponetSum[0] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 1 && mywave.blueDepth <= 2.0) {
-                        depthCount[1]++;
-                        depthComponetSize[1] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[1] += gauAvgDiff;
-                        GauVariance[1] += gauVariance;
-                        LmAvgDiff[1] += lmAvgDiff;
-                        LmVariance[1] += lmVariance;
-                        DiffA0[1] += diffA0;
-                        DiffU0[1] += diffU0;
-                        DiffSigma0[1] += diffSigma0;
-                        DiffA1[1] += diffA1;
-                        DiffU1[1] += diffU1;
-                        DiffSigma1[1] += diffSigma1;
-                        backComponetSize[1] += (index[1] - index[0] - 1);
-                        backComponetSum[1] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 2 && mywave.blueDepth <= 3.0) {
-                        depthCount[2]++;
-                        depthComponetSize[2] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[2] += gauAvgDiff;
-                        GauVariance[2] += gauVariance;
-                        LmAvgDiff[2] += lmAvgDiff;
-                        LmVariance[2] += lmVariance;
-                        DiffA0[2] += diffA0;
-                        DiffU0[2] += diffU0;
-                        DiffSigma0[2] += diffSigma0;
-                        DiffA1[2] += diffA1;
-                        DiffU1[2] += diffU1;
-                        DiffSigma1[2] += diffSigma1;
-                        backComponetSize[2] += (index[1] - index[0] - 1);
-                        backComponetSum[2] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 3 && mywave.blueDepth <= 4.0) {
-                        depthCount[3]++;
-                        depthComponetSize[3] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[3] += gauAvgDiff;
-                        GauVariance[3] += gauVariance;
-                        LmAvgDiff[3] += lmAvgDiff;
-                        LmVariance[3] += lmVariance;
-                        DiffA0[3] += diffA0;
-                        DiffU0[3] += diffU0;
-                        DiffSigma0[3] += diffSigma0;
-                        DiffA1[3] += diffA1;
-                        DiffU1[3] += diffU1;
-                        DiffSigma1[3] += diffSigma1;
-                        backComponetSize[3] += (index[1] - index[0] - 1);
-                        backComponetSum[3] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 4 && mywave.blueDepth <= 5.0) {
-                        depthCount[4]++;
-                        depthComponetSize[4] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[4] += gauAvgDiff;
-                        GauVariance[4] += gauVariance;
-                        LmAvgDiff[4] += lmAvgDiff;
-                        LmVariance[4] += lmVariance;
-                        DiffA0[4] += diffA0;
-                        DiffU0[4] += diffU0;
-                        DiffSigma0[4] += diffSigma0;
-                        DiffA1[4] += diffA1;
-                        DiffU1[4] += diffU1;
-                        DiffSigma1[4] += diffSigma1;
-                        backComponetSize[4] += (index[1] - index[0] - 1);
-                        backComponetSum[4] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 5 && mywave.blueDepth <= 6.0) {
-                        depthCount[5]++;
-                        depthComponetSize[5] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[5] += gauAvgDiff;
-                        GauVariance[5] += gauVariance;
-                        LmAvgDiff[5] += lmAvgDiff;
-                        LmVariance[5] += lmVariance;
-                        DiffA0[5] += diffA0;
-                        DiffU0[5] += diffU0;
-                        DiffSigma0[5] += diffSigma0;
-                        DiffA1[5] += diffA1;
-                        DiffU1[5] += diffU1;
-                        DiffSigma1[5] += diffSigma1;
-                        backComponetSize[5] += (index[1] - index[0] - 1);
-                        backComponetSum[5] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 6 && mywave.blueDepth <= 7.0) {
-                        depthCount[6]++;
-                        depthComponetSize[6] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[6] += gauAvgDiff;
-                        GauVariance[6] += gauVariance;
-                        LmAvgDiff[6] += lmAvgDiff;
-                        LmVariance[6] += lmVariance;
-                        DiffA0[6] += diffA0;
-                        DiffU0[6] += diffU0;
-                        DiffSigma0[6] += diffSigma0;
-                        DiffA1[6] += diffA1;
-                        DiffU1[6] += diffU1;
-                        DiffSigma1[6] += diffSigma1;
-                        backComponetSize[6] += (index[1] - index[0] - 1);
-                        backComponetSum[6] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 7 && mywave.blueDepth <= 8.0) {
-                        depthCount[7]++;
-                        depthComponetSize[7] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[7] += gauAvgDiff;
-                        GauVariance[7] += gauVariance;
-                        LmAvgDiff[7] += lmAvgDiff;
-                        LmVariance[7] += lmVariance;
-                        DiffA0[7] += diffA0;
-                        DiffU0[7] += diffU0;
-                        DiffSigma0[7] += diffSigma0;
-                        DiffA1[7] += diffA1;
-                        DiffU1[7] += diffU1;
-                        DiffSigma1[7] += diffSigma1;
-                        backComponetSize[7] += (index[1] - index[0] - 1);
-                        backComponetSum[7] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 8 && mywave.blueDepth <= 9.0) {
-                        depthCount[8]++;
-                        depthComponetSize[8] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[8] += gauAvgDiff;
-                        GauVariance[8] += gauVariance;
-                        LmAvgDiff[8] += lmAvgDiff;
-                        LmVariance[8] += lmVariance;
-                        DiffA0[8] += diffA0;
-                        DiffU0[8] += diffU0;
-                        DiffSigma0[8] += diffSigma0;
-                        DiffA1[8] += diffA1;
-                        DiffU1[8] += diffU1;
-                        DiffSigma1[8] += diffSigma1;
-                        backComponetSize[8] += (index[1] - index[0] - 1);
-                        backComponetSum[8] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
-                    } else if (mywave.blueDepth > 9 && mywave.blueDepth <= 10.0) {
-                        depthCount[9]++;
-                        depthComponetSize[9] += mywave.m_BlueGauPra.size();
-                        GauAvgDiff[9] += gauAvgDiff;
-                        GauVariance[9] += gauVariance;
-                        LmAvgDiff[9] += lmAvgDiff;
-                        LmVariance[9] += lmVariance;
-                        DiffA0[9] += diffA0;
-                        DiffU0[9] += diffU0;
-                        DiffSigma0[9] += diffSigma0;
-                        DiffA1[9] += diffA1;
-                        DiffU1[9] += diffU1;
-                        DiffSigma1[9] += diffSigma1;
-                        backComponetSize[9] += (index[1] - index[0] - 1);
-                        backComponetSum[9] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
+                    //按1米间隔统计
+                    range = mywave.blueDepth == 0 ? -1 : (int) mywave.blueDepth;
+                    if (range >= 0 && range <= 9) {
+                        depthCount[range]++;
+                        depthComponetSize[range] += mywave.m_BlueGauPra.size();
+                        GauAvgDiff[range] += gauAvgDiff;
+                        GauVariance[range] += gauVariance;
+                        LmAvgDiff[range] += lmAvgDiff;
+                        LmVariance[range] += lmVariance;
+                        DiffA0[range] += diffA0;
+                        DiffU0[range] += diffU0;
+                        DiffSigma0[range] += diffSigma0;
+                        DiffA1[range] += diffA1;
+                        DiffU1[range] += diffU1;
+                        DiffSigma1[range] += diffSigma1;
+                        backComponetSize[range] += (index[1] - index[0] - 1);
+                        backComponetSum[range] += getEnergy(mywave.m_BlueGauPra, index[0], index[1]);
                     }
 
                     break;
@@ -1202,157 +1069,23 @@ void ReadFile::dataAnalysis() {
                     diffSigma0 = getDiffSigma(index[0], init, mywave.m_GreenGauPra);
                     diffSigma1 = getDiffSigma(index[1], init, mywave.m_GreenGauPra);
 
-                    //统计
-                    if (mywave.greenDepth > 0 && mywave.greenDepth <= 1.0) {
-                        depthCount[0]++;
-                        depthComponetSize[0] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[0] += gauAvgDiff;
-                        GauVariance[0] += gauVariance;
-                        LmAvgDiff[0] += lmAvgDiff;
-                        LmVariance[0] += lmVariance;
-                        DiffA0[0] += diffA0;
-                        DiffU0[0] += diffU0;
-                        DiffSigma0[0] += diffSigma0;
-                        DiffA1[0] += diffA1;
-                        DiffU1[0] += diffU1;
-                        DiffSigma1[0] += diffSigma1;
-                        backComponetSize[0] += (index[1] - index[0] - 1);
-                        backComponetSum[0] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 1 && mywave.greenDepth <= 2.0) {
-                        depthCount[1]++;
-                        depthComponetSize[1] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[1] += gauAvgDiff;
-                        GauVariance[1] += gauVariance;
-                        LmAvgDiff[1] += lmAvgDiff;
-                        LmVariance[1] += lmVariance;
-                        DiffA0[1] += diffA0;
-                        DiffU0[1] += diffU0;
-                        DiffSigma0[1] += diffSigma0;
-                        DiffA1[1] += diffA1;
-                        DiffU1[1] += diffU1;
-                        DiffSigma1[1] += diffSigma1;
-                        backComponetSize[1] += (index[1] - index[0] - 1);
-                        backComponetSum[1] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 2 && mywave.greenDepth <= 3.0) {
-                        depthCount[2]++;
-                        depthComponetSize[2] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[2] += gauAvgDiff;
-                        GauVariance[2] += gauVariance;
-                        LmAvgDiff[2] += lmAvgDiff;
-                        LmVariance[2] += lmVariance;
-                        DiffA0[2] += diffA0;
-                        DiffU0[2] += diffU0;
-                        DiffSigma0[2] += diffSigma0;
-                        DiffA1[2] += diffA1;
-                        DiffU1[2] += diffU1;
-                        DiffSigma1[2] += diffSigma1;
-                        backComponetSize[2] += (index[1] - index[0] - 1);
-                        backComponetSum[2] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 3 && mywave.greenDepth <= 4.0) {
-                        depthCount[3]++;
-                        depthComponetSize[3] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[3] += gauAvgDiff;
-                        GauVariance[3] += gauVariance;
-                        LmAvgDiff[3] += lmAvgDiff;
-                        LmVariance[3] += lmVariance;
-                        DiffA0[3] += diffA0;
-                        DiffU0[3] += diffU0;
-                        DiffSigma0[3] += diffSigma0;
-                        DiffA1[3] += diffA1;
-                        DiffU1[3] += diffU1;
-                        DiffSigma1[3] += diffSigma1;
-                        backComponetSize[3] += (index[1] - index[0] - 1);
-                        backComponetSum[3] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 4 && mywave.greenDepth <= 5.0) {
-                        depthCount[4]++;
-                        depthComponetSize[4] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[4] += gauAvgDiff;
-                        GauVariance[4] += gauVariance;
-                        LmAvgDiff[4] += lmAvgDiff;
-                        LmVariance[4] += lmVariance;
-                        DiffA0[4] += diffA0;
-                        DiffU0[4] += diffU0;
-                        DiffSigma0[4] += diffSigma0;
-                        DiffA1[4] += diffA1;
-                        DiffU1[4] += diffU1;
-                        DiffSigma1[4] += diffSigma1;
-                        backComponetSize[4] += (index[1] - index[0] - 1);
-                        backComponetSum[4] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 5 && mywave.greenDepth <= 6.0) {
-                        depthCount[5]++;
-                        depthComponetSize[5] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[5] += gauAvgDiff;
-                        GauVariance[5] += gauVariance;
-                        LmAvgDiff[5] += lmAvgDiff;
-                        LmVariance[5] += lmVariance;
-                        DiffA0[5] += diffA0;
-                        DiffU0[5] += diffU0;
-                        DiffSigma0[5] += diffSigma0;
-                        DiffA1[5] += diffA1;
-                        DiffU1[5] += diffU1;
-                        DiffSigma1[5] += diffSigma1;
-                        backComponetSize[5] += (index[1] - index[0] - 1);
-                        backComponetSum[5] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 6 && mywave.greenDepth <= 7.0) {
-                        depthCount[6]++;
-                        depthComponetSize[6] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[6] += gauAvgDiff;
-                        GauVariance[6] += gauVariance;
-                        LmAvgDiff[6] += lmAvgDiff;
-                        LmVariance[6] += lmVariance;
-                        DiffA0[6] += diffA0;
-                        DiffU0[6] += diffU0;
-                        DiffSigma0[6] += diffSigma0;
-                        DiffA1[6] += diffA1;
-                        DiffU1[6] += diffU1;
-                        DiffSigma1[6] += diffSigma1;
-                        backComponetSize[6] += (index[1] - index[0] - 1);
-                        backComponetSum[6] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 7 && mywave.greenDepth <= 8.0) {
-                        depthCount[7]++;
-                        depthComponetSize[7] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[7] += gauAvgDiff;
-                        GauVariance[7] += gauVariance;
-                        LmAvgDiff[7] += lmAvgDiff;
-                        LmVariance[7] += lmVariance;
-                        DiffA0[7] += diffA0;
-                        DiffU0[7] += diffU0;
-                        DiffSigma0[7] += diffSigma0;
-                        DiffA1[7] += diffA1;
-                        DiffU1[7] += diffU1;
-                        DiffSigma1[7] += diffSigma1;
-                        backComponetSize[7] += (index[1] - index[0] - 1);
-                        backComponetSum[7] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 8 && mywave.greenDepth <= 9.0) {
-                        depthCount[8]++;
-                        depthComponetSize[8] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[8] += gauAvgDiff;
-                        GauVariance[8] += gauVariance;
-                        LmAvgDiff[8] += lmAvgDiff;
-                        LmVariance[8] += lmVariance;
-                        DiffA0[8] += diffA0;
-                        DiffU0[8] += diffU0;
-                        DiffSigma0[8] += diffSigma0;
-                        DiffA1[8] += diffA1;
-                        DiffU1[8] += diffU1;
-                        DiffSigma1[8] += diffSigma1;
-                        backComponetSize[8] += (index[1] - index[0] - 1);
-                        backComponetSum[8] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
-                    } else if (mywave.greenDepth > 9 && mywave.greenDepth <= 10.0) {
-                        depthCount[9]++;
-                        depthComponetSize[9] += mywave.m_GreenGauPra.size();
-                        GauAvgDiff[9] += gauAvgDiff;
-                        GauVariance[9] += gauVariance;
-                        LmAvgDiff[9] += lmAvgDiff;
-                        LmVariance[9] += lmVariance;
-                        DiffA0[9] += diffA0;
-                        DiffU0[9] += diffU0;
-                        DiffSigma0[9] += diffSigma0;
-                        DiffA1[9] += diffA1;
-                        DiffU1[9] += diffU1;
-                        DiffSigma1[9] += diffSigma1;
-                        backComponetSize[9] += (index[1] - index[0] - 1);
-                        backComponetSum[9] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
+                    //按1米间隔统计
+                    range = mywave.greenDepth == 0 ? -1 : (int) mywave.greenDepth;
+                    if (range >= 0 && range <= 9) {
+                        depthCount[range]++;
+                        depthComponetSize[range] += mywave.m_GreenGauPra.size();
+                        GauAvgDiff[range] += gauAvgDiff;
+                        GauVariance[range] += gauVariance;
+                        LmAvgDiff[range] += lmAvgDiff;
+                        LmVariance[range] += lmVariance;
+                        DiffA0[range] += diffA0;
+                        DiffU0[range] += diffU0;
+                        DiffSigma0[range] += diffSigma0;
+                        DiffA1[range] += diffA1;
+                        DiffU1[range] += diffU1;
+                        DiffSigma1[range] += diffSigma1;
+                        backComponetSize[range] += (index[1] - index[0] - 1);
+                        backComponetSum[range] += getEnergy(mywave.m_GreenGauPra, index[0], index[1]);
                     }
 
                     break;
