@@ -943,6 +943,18 @@ void ReadFile::dataAnalysis() {
     int backComponetSize[10] = {0};
     //后向散射波形能量
     float backComponetSum[10] = {0};
+    //使用B通道数据
+    int Bchannel[10] = {0};
+    //使用G通道数据
+    int Gchannel[10] = {0};
+    //数据截取范围
+    int Region[10] = {0};
+    int EffectiveRegion[10] = {0};
+    int EffectiveRegionCount[10] = {0};
+    //滤波后平均差
+    float FilterAvgDiff[10] = {0};
+    //滤波前后方差
+    float FilterVariance[10] = {0};
     //高斯分解后平均差
     float GauAvgDiff[10] = {0};
     //高斯分解前后方差
@@ -991,20 +1003,28 @@ void ReadFile::dataAnalysis() {
 
             blueStd >= 1.2 * greenStd ? bgflag = BLUE : bgflag = GREEN;//判断阈值
 
+            float filterAvgDiff;
+            float filterVariance;
             float gauAvgDiff;
             float gauVariance;
             float lmAvgDiff;
             float lmVariance;
+            vector<float> beforeFilter;
             float diffA0, diffA1, diffU0, diffU1, diffSigma0, diffSigma1;
             vector<GaussParameter> init;
             int index[2];
             int range = 0;
+            int region;
 
             switch (bgflag) {
                 case BLUE:
                     WaveData::ostreamFlag = BLUE;
 
-                    mywave.Filter(mywave.m_BlueWave, mywave.m_BlueNoise);
+                    beforeFilter = mywave.m_BlueWave;
+                    region = mywave.FilterRegion(mywave.m_BlueWave, mywave.m_BlueNoise);
+                    filterAvgDiff = calcuAvgDiff(beforeFilter, mywave.m_BlueWave);
+                    filterVariance = calcuVariance(beforeFilter, mywave.m_BlueWave, filterAvgDiff);
+
                     mywave.Resolve(mywave.m_BlueWave, mywave.m_BlueGauPra, mywave.m_BlueNoise);
                     mywave.CalcuAfter(mywave.m_BlueGauPra, mywave.afterGauss);
                     gauAvgDiff = calcuAvgDiff(mywave.m_BlueWave, mywave.afterGauss);
@@ -1030,6 +1050,14 @@ void ReadFile::dataAnalysis() {
                     if (range >= 0 && range <= 9) {
                         depthCount[range]++;
                         depthComponetSize[range] += mywave.m_BlueGauPra.size();
+                        Bchannel[range]++;
+                        Region[range] += region;
+                        if (region != 320) {
+                            EffectiveRegionCount[range]++;
+                            EffectiveRegion[range] += region;
+                        }
+                        FilterAvgDiff[range] += filterAvgDiff;
+                        FilterVariance[range] += filterVariance;
                         GauAvgDiff[range] += gauAvgDiff;
                         GauVariance[range] += gauVariance;
                         LmAvgDiff[range] += lmAvgDiff;
@@ -1048,7 +1076,11 @@ void ReadFile::dataAnalysis() {
                 case GREEN:
                     WaveData::ostreamFlag = GREEN;
 
-                    mywave.Filter(mywave.m_GreenWave, mywave.m_GreenNoise);
+                    beforeFilter = mywave.m_GreenWave;
+                    region = mywave.FilterRegion(mywave.m_GreenWave, mywave.m_GreenNoise);
+                    filterAvgDiff = calcuAvgDiff(beforeFilter, mywave.m_GreenWave);
+                    filterVariance = calcuVariance(beforeFilter, mywave.m_GreenWave, filterAvgDiff);
+
                     mywave.Resolve(mywave.m_GreenWave, mywave.m_GreenGauPra, mywave.m_GreenNoise);
                     mywave.CalcuAfter(mywave.m_GreenGauPra, mywave.afterGauss);
                     gauAvgDiff = calcuAvgDiff(mywave.m_GreenWave, mywave.afterGauss);
@@ -1074,6 +1106,14 @@ void ReadFile::dataAnalysis() {
                     if (range >= 0 && range <= 9) {
                         depthCount[range]++;
                         depthComponetSize[range] += mywave.m_GreenGauPra.size();
+                        Gchannel[range]++;
+                        Region[range] += region;
+                        if (region != 320) {
+                            EffectiveRegionCount[range]++;
+                            EffectiveRegion[range] += region;
+                        }
+                        FilterAvgDiff[range] += filterAvgDiff;
+                        FilterVariance[range] += filterVariance;
                         GauAvgDiff[range] += gauAvgDiff;
                         GauVariance[range] += gauVariance;
                         LmAvgDiff[range] += lmAvgDiff;
@@ -1111,6 +1151,24 @@ void ReadFile::dataAnalysis() {
                       << " AVG " << (float) depthComponetSize[i] / depthCount[i]
                       << " backAvgSize " << (float) backComponetSize[i] / depthCount[i]
                       << " backAvgEnergy " << backComponetSum[i] / depthCount[i]
+                      << endl;
+    }
+
+    for (int i = 0; i < 10; ++i) {
+        output_stream << i << " Bchannel " << Bchannel[i] << " " << (float) Bchannel[i] / (Bchannel[i] + Gchannel[i])
+                      << " Gchannel " << Gchannel[i] << " " << (float) Gchannel[i] / (Bchannel[i] + Gchannel[i])
+                      << endl;
+    }
+
+    for (int i = 0; i < 10; ++i) {
+        output_stream << i << " RegionAvg " << Region[i] / depthCount[i]
+                      << " EffctiveRegionAvg " << EffectiveRegion[i] / EffectiveRegionCount[i]
+                      << endl;
+    }
+
+    for (int i = 0; i < 10; ++i) {
+        output_stream << i << " FilterAvgDiff " << FilterAvgDiff[i] << " FilterVariance " << FilterVariance[i]
+                      << " AVG " << FilterAvgDiff[i] / depthCount[i] << " " << FilterVariance[i] / depthCount[i] << " "
                       << endl;
     }
 

@@ -489,6 +489,93 @@ void WaveData::Filter(vector<float> &srcWave, float &noise) {
 }
 
 
+/*功能：		预处理数据：截取有效部分并进行去噪滤波操作
+//&srcWave:	通道原始数据
+//&noise：	记录的噪声所属波段
+*/
+int WaveData::FilterRegion(vector<float> &srcWave, float &noise) {
+    //有效数据的截取部分实验效果并不好。暂时没有加入
+    int m = 30, n = 30;//兴趣区域的区间端点
+    vector<float> vm(srcWave.begin(), srcWave.begin() + m);
+    float Svm = calculateSigma(vm);
+
+    //前向后遍历取点
+    for (int i = 30; i < srcWave.size() - 1; i++) {
+        if (srcWave.at(i - 1) > srcWave.at(i) && srcWave.at(i) < srcWave.at(i + 1)) {
+            m = i;
+            for (int j = i + 2; j < srcWave.size() - 1; j++) {
+                if (srcWave.at(j - 1) < srcWave.at(j) && srcWave.at(j) > srcWave.at(j + 1))
+                    n = j;
+                break;
+            }
+            if (n > m) {
+                vector<float> v1(srcWave.begin(), srcWave.begin() + m);
+                vector<float> v2(srcWave.begin(), srcWave.begin() + n);
+                float Sv1 = calculateSigma(v1);
+                float Sv2 = calculateSigma(v2);
+                if (Sv1 > 1.5 * Svm || Sv2 > 2 * Sv1)
+                    break;
+            }
+
+        }
+    }
+    int k = 50, l = 50;//兴趣区域的区间端点
+    vector<float> vk(srcWave.end() - k, srcWave.end());
+    float Svk = calculateSigma(vk);
+
+    //后向前遍历取点
+    for (int i = 50; i < srcWave.size() - 1; i++) {
+        if (srcWave.at(320 - (i - 1)) > srcWave.at(320 - i) && srcWave.at(320 - i) < srcWave.at(320 - (i + 1))) {
+            k = i;
+            for (int j = i + 2; j < srcWave.size() - 1; j++) {
+                if (srcWave.at(320 - (j - 1)) < srcWave.at(320 - j) && srcWave.at(320 - j) > srcWave.at(320 - (j + 1)))
+                    l = j;
+                break;
+            }
+            if (l > k) {
+                vector<float> v1(srcWave.end() - k, srcWave.end());
+                vector<float> v2(srcWave.end() - l, srcWave.end());
+                float Sv1 = calculateSigma(v1);
+                float Sv2 = calculateSigma(v2);
+                if (Sv1 > 1.5 * Svk || Sv2 > 2 * Sv1)
+                    break;
+            }
+        }
+    }
+
+    /*
+    if ((n + 10) <= (320 - k))
+    {
+        for (int i = m - 1; i >= 0; i--)
+        {
+            srcWave.at(i) = srcWave.at(m);
+        }
+        for (int j = 320 - (k - 1); j <= 319; j++)
+        {
+            srcWave.at(j) = srcWave.at(320 - k);
+        }
+    }
+    */
+
+    //高斯滤波去噪
+    vector<float> dstWave;
+    dstWave.assign(srcWave.begin(), srcWave.end());
+    gaussian(&srcWave[0], &dstWave[0]);
+
+    noise = 0;
+    //计算随机噪声:两次滤波前后的波形数据的峰值差的均方差（标准差）
+    for (int i = 0; i < srcWave.size(); i++) {
+        noise += (srcWave.at(i) - dstWave.at(i)) * (srcWave.at(i) - dstWave.at(i));
+    }
+    noise = sqrt(noise / srcWave.size());
+
+    srcWave.assign(dstWave.begin(), dstWave.end());
+
+    //返回截取范围
+    return l - m > 0 ? l - m + 1 : 320;
+}
+
+
 /*功能：			高斯分量分解函数
 //&srcWave:		通道原始数据
 //&waveParam：	该通道的高斯分量参数
