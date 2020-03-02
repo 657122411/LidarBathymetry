@@ -1022,8 +1022,8 @@ void ReadFile::dataAnalysis() {
 
                     beforeFilter = mywave.m_BlueWave;
                     region = mywave.FilterRegion(mywave.m_BlueWave, mywave.m_BlueNoise);
-                    filterAvgDiff = calcuAvgDiff(beforeFilter, mywave.m_BlueWave);
-                    filterVariance = calcuVariance(beforeFilter, mywave.m_BlueWave, filterAvgDiff);
+                    filterAvgDiff = calcuAvgAbsDiff(beforeFilter, mywave.m_BlueWave);
+                    filterVariance = calcuAbsVariance(beforeFilter, mywave.m_BlueWave, filterAvgDiff);
 
                     mywave.Resolve(mywave.m_BlueWave, mywave.m_BlueGauPra, mywave.m_BlueNoise);
                     mywave.CalcuAfter(mywave.m_BlueGauPra, mywave.afterGauss);
@@ -1078,8 +1078,8 @@ void ReadFile::dataAnalysis() {
 
                     beforeFilter = mywave.m_GreenWave;
                     region = mywave.FilterRegion(mywave.m_GreenWave, mywave.m_GreenNoise);
-                    filterAvgDiff = calcuAvgDiff(beforeFilter, mywave.m_GreenWave);
-                    filterVariance = calcuVariance(beforeFilter, mywave.m_GreenWave, filterAvgDiff);
+                    filterAvgDiff = calcuAvgAbsDiff(beforeFilter, mywave.m_GreenWave);
+                    filterVariance = calcuAbsVariance(beforeFilter, mywave.m_GreenWave, filterAvgDiff);
 
                     mywave.Resolve(mywave.m_GreenWave, mywave.m_GreenGauPra, mywave.m_GreenNoise);
                     mywave.CalcuAfter(mywave.m_GreenGauPra, mywave.afterGauss);
@@ -1229,6 +1229,41 @@ float ReadFile::calcuAvgDiff(vector<float> &v1, vector<float> &v2) {
     if (v1.size() == 320 && v2.size() == 320) {
         for (std::vector<int>::size_type i = 0; i != v1.size(); i++) {
             ret += v1[i] - v2[i];
+        }
+        return ret / 320;
+    }
+    return ret;
+}
+
+
+/**
+ * 计算绝对平均差
+ * @param v1 数组1
+ * @param v2 数据2
+ * @return float
+ */
+float ReadFile::calcuAvgAbsDiff(vector<float> &v1, vector<float> &v2) {
+    float ret = 0.0;
+    if (v1.size() == 320 && v2.size() == 320) {
+        for (std::vector<int>::size_type i = 0; i != v1.size(); i++) {
+            ret += abs(v1[i] - v2[i]);
+        }
+        return ret / 320;
+    }
+    return ret;
+}
+
+/**
+ * 计算绝对方差
+ * @param v1 数组
+ * @param avg 平均值
+ * @return float
+ */
+float ReadFile::calcuAbsVariance(vector<float> &v1, vector<float> &v2, float avg) {
+    float ret = 0;
+    if (v1.size() == 320 && v2.size() == 320) {
+        for (std::vector<int>::size_type i = 0; i != v1.size(); i++) {
+            ret += pow((abs(v1[i] - v2[i]) - avg), 2);
         }
         return ret / 320;
     }
